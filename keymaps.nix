@@ -1,0 +1,203 @@
+{
+  # pkgs,
+  # lib,
+  # config,
+  # options,
+  ...
+}: {
+  vim.keymaps = [
+    {
+      mode = "n";
+      key = "<C-s>";
+      action = "<cmd>w<cr><esc>";
+      silent = true;
+      desc = "Save file";
+    }
+    {
+      mode = "n";
+      key = "<leader>qq";
+      action = "<cmd>quitall<cr><esc>";
+      silent = true;
+      desc = "Quit all";
+    }
+
+    # Toggle
+    {
+      mode = "n";
+      key = "<leader>ul";
+      action = ":lua vim.o.number = not vim.o.number<cr>";
+      silent = true;
+      desc = "Toggle Line Numbers";
+    }
+    {
+      mode = "n";
+      key = "<leader>uL";
+      action = ":lua vim.o.relativenumber = not vim.o.relativenumber<cr>";
+      silent = true;
+      desc = "Toggle Relative Line Numbers";
+    }
+
+    {
+      mode = "v";
+      key = "<A-Down>";
+      action = ":m '>+1<CR>gv=gv";
+      silent = true;
+      desc = "Move down when line is highlighted";
+    }
+    {
+      mode = "v";
+      key = "<A-Up>";
+      action = ":m '<-2<CR>gv=gv";
+      silent = true;
+      desc = "Move up when line is highlighted";
+    }
+    {
+      mode = "n";
+      key = "<A-Down>";
+      action = ":m .+1<CR>==";
+      silent = true;
+      desc = "Move line down";
+    }
+    {
+      mode = "n";
+      key = "<A-Up>";
+      action = ":m .-2<CR>==";
+      silent = true;
+      desc = "Move line up";
+    }
+    {
+      mode = "v";
+      key = "<";
+      action = "<gv";
+      silent = true;
+      desc = "Indent while remaining in visual mode.";
+    }
+    {
+      mode = "v";
+      key = ">";
+      action = ">gv";
+      silent = true;
+      desc = "Indent while remaining in visual mode.";
+    }
+
+    {
+      mode = "n";
+      key = "J";
+      action = "mzJ`z";
+      silent = true;
+      desc = "Allow cursor to stay in the same place after appeding to current line";
+    }
+
+    {
+      mode = "n";
+      key = "<C-d>";
+      action = "<C-d>zz";
+      silent = true;
+      desc = "Allow <C-d> and <C-u> to keep the cursor in the middle";
+    }
+    {
+      mode = "n";
+      key = "<S-Down>";
+      action = "<S-Down>zz";
+      silent = true;
+      desc = "Allow <S-Up> and <S-Down> to keep the cursor in the middle";
+    }
+    {
+      mode = "n";
+      key = "<C-u>";
+      action = "<C-u>zz";
+      desc = "Allow C-d and C-u to keep the cursor in the middle";
+    }
+    {
+      mode = "n";
+      key = "<S-Up>";
+      action = "<S-Up>zz";
+      desc = "Allow <S-Up> and <S-Down> to keep the cursor in the middle";
+    }
+
+    # Remap for dealing with word wrap and adding jumps to the jumplist.
+    {
+      mode = "n";
+      key = "j";
+      action = "
+        [[(v:count > 1 ? 'm`' . v:count : 'g') . 'j']]
+      ";
+      expr = true;
+      desc = "Remap for dealing with word wrap and adding jumps to the jumplist.";
+    }
+    {
+      mode = "n";
+      key = "k";
+      action = "
+        [[(v:count > 1 ? 'm`' . v:count : 'g') . 'k']]
+      ";
+      expr = true;
+      desc = "Remap for dealing with word wrap and adding jumps to the jumplist.";
+    }
+    {
+      mode = "n";
+      key = "n";
+      action = "nzzzv";
+      desc = "Allow search terms to stay in the middle";
+    }
+    {
+      mode = "n";
+      key = "N";
+      action = "Nzzzv";
+      desc = "Allow search terms to stay in the middle";
+    }
+
+    {
+      mode = "x";
+      key = "<leader>p";
+      action = "\"_dP";
+      desc = "Deletes to void register and paste over";
+    }
+
+    {
+      mode = "v";
+      key = "y";
+      action = "ygv<Esc>";
+      silent = true;
+      desc = "Return to original position after yank";
+    }
+    {
+      mode = ["n" "v"];
+      key = "p";
+      action = "hpl";
+      silent = true;
+      desc = "Paste from the start of the cursor";
+    }
+    {
+      mode = ["n" "v"];
+      key = "<leader>y";
+      action = "\"+ygv<Esc>";
+      desc = "Copy to system clipboard";
+    }
+    {
+      mode = ["n" "v"];
+      key = "<leader>Y";
+      action = "\"+Ygv<Esc>";
+      desc = "Copy to system clipboard";
+    }
+    {
+      mode = ["n" "v"];
+      key = "<leader>p";
+      action = "h\"+pl";
+      desc = "Paste from system clipboard";
+    }
+    {
+      mode = ["n" "v"];
+      key = "<leader>P";
+      action = "h\"+Pl";
+      desc = "Paste from system clipboard";
+    }
+
+    {
+      mode = ["n" "v"];
+      key = "<leader>D";
+      action = "\"_d";
+      desc = "Delete to void register";
+    }
+  ];
+}
