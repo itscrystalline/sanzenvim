@@ -6,6 +6,9 @@
         basic = true;
         extra = true;
       };
+      options = {
+        delay = 2;
+      };
     };
   };
 }

@@ -91,27 +91,33 @@
     {
       mode = "n";
       key = "<C-d>";
-      action = "<C-d>zz";
+      action = ''function() require("cinnamon").scroll("<C-d>zz") end'';
+      lua = true;
       silent = true;
       desc = "Allow <C-d> and <C-u> to keep the cursor in the middle";
     }
     {
       mode = "n";
       key = "<S-Down>";
-      action = "<S-Down>zz";
+      action = ''function() require("cinnamon").scroll("<S-Down>zz") end'';
+      lua = true;
       silent = true;
       desc = "Allow <S-Up> and <S-Down> to keep the cursor in the middle";
     }
     {
       mode = "n";
       key = "<C-u>";
-      action = "<C-u>zz";
+      action = ''function() require("cinnamon").scroll("<C-u>zz") end'';
+      lua = true;
+      silent = true;
       desc = "Allow C-d and C-u to keep the cursor in the middle";
     }
     {
       mode = "n";
       key = "<S-Up>";
-      action = "<S-Up>zz";
+      action = ''function() require("cinnamon").scroll("<S-Up>zz") end'';
+      lua = true;
+      silent = true;
       desc = "Allow <S-Up> and <S-Down> to keep the cursor in the middle";
     }
 
@@ -154,50 +160,58 @@
       desc = "Deletes to void register and paste over";
     }
 
-    {
-      mode = "v";
-      key = "y";
-      action = "ygv<Esc>";
-      silent = true;
-      desc = "Return to original position after yank";
-    }
-    {
-      mode = ["n" "v"];
-      key = "p";
-      action = "hpl";
-      silent = true;
-      desc = "Paste from the start of the cursor";
-    }
-    {
-      mode = ["n" "v"];
-      key = "<leader>y";
-      action = "\"+ygv<Esc>";
-      desc = "Copy to system clipboard";
-    }
-    {
-      mode = ["n" "v"];
-      key = "<leader>Y";
-      action = "\"+Ygv<Esc>";
-      desc = "Copy to system clipboard";
-    }
-    {
-      mode = ["n" "v"];
-      key = "<leader>p";
-      action = "h\"+pl";
-      desc = "Paste from system clipboard";
-    }
-    {
-      mode = ["n" "v"];
-      key = "<leader>P";
-      action = "h\"+Pl";
-      desc = "Paste from system clipboard";
-    }
+    # {
+    #   mode = "v";
+    #   key = "y";
+    #   action = "ygv<Esc>";
+    #   silent = true;
+    #   desc = "Return to original position after yank";
+    # }
+    # {
+    #   mode = ["n" "v"];
+    #   key = "p";
+    #   action = "hpl";
+    #   silent = true;
+    #   desc = "Paste from the start of the cursor";
+    # }
+    # {
+    #   mode = ["n" "v"];
+    #   key = "<leader>y";
+    #   action = "\"+ygv<Esc>";
+    #   desc = "Copy to system clipboard";
+    # }
+    # {
+    #   mode = ["n" "v"];
+    #   key = "<leader>Y";
+    #   action = "\"+Ygv<Esc>";
+    #   desc = "Copy to system clipboard";
+    # }
+    # {
+    #   mode = ["n" "v"];
+    #   key = "<leader>p";
+    #   action = "h\"+pl";
+    #   desc = "Paste from system clipboard";
+    # }
+    # {
+    #   mode = ["n" "v"];
+    #   key = "<leader>P";
+    #   action = "h\"+Pl";
+    #   desc = "Paste from system clipboard";
+    # }
 
     {
       mode = ["n" "v"];
       key = "<leader>D";
       action = "\"_d";
       desc = "Delete to void register";
+    }
+
+    {
+      mode = "n";
+      key = "<leader>o";
+      action = ":Oil --float<CR>";
+      desc = "Open Oil on parent dir";
+      silent = true;
     }
   ];
 }

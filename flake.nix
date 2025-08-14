@@ -26,6 +26,8 @@
             ./keymaps.nix
             ./plugins
             ./visuals
+            ./utilities
+            ./lauguages
           ];
         }).neovim;
     });
