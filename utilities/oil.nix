@@ -8,6 +8,7 @@
       ];
       delete_to_trash = true;
       use_default_keymaps = true;
+      watch_for_changes = true;
       view_options = {
         show_hidden = true;
       };
@@ -31,7 +32,7 @@
         "g?" = "actions.show_help";
         "<CR>" = "actions.select";
         "<C-\\>" = "actions.select_vsplit";
-        "<C-enter>" = "actions.select_split"; # this is used to navigate left
+        "<C-e>" = "actions.select_split"; # this is used to navigate left
         "<C-t>" = "actions.select_tab";
         "<C-p>" = "actions.preview";
         "<C-c>" = "actions.close";

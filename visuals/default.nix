@@ -9,5 +9,6 @@
     ./fidget.nix
     ./rainbow-delimiters.nix
     ./cinnamon-nvim.nix
+    ./bufferline.nix
   ];
 }

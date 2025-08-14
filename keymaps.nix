@@ -218,5 +218,28 @@
       desc = "Open Oil on parent dir";
       silent = true;
     }
+
+    {
+      mode = "t";
+      key = "<C-x>";
+      action = "<C-\\><C-n>";
+      desc = "Escape out of Terminal mode";
+      silent = true;
+    }
+
+    {
+      mode = "n";
+      key = "<leader>nv";
+      action = ":ToggleTerm direction=vertical";
+      desc = "Open Vertical Terminal";
+      silent = true;
+    }
+    {
+      mode = "n";
+      key = "<leader>nv";
+      action = ":ToggleTerm direction=float";
+      desc = "Open Vertical Terminal";
+      silent = true;
+    }
   ];
 }
