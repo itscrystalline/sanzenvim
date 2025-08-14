@@ -160,44 +160,49 @@
       desc = "Deletes to void register and paste over";
     }
 
-    # {
-    #   mode = "v";
-    #   key = "y";
-    #   action = "ygv<Esc>";
-    #   silent = true;
-    #   desc = "Return to original position after yank";
-    # }
-    # {
-    #   mode = ["n" "v"];
-    #   key = "p";
-    #   action = "hpl";
-    #   silent = true;
-    #   desc = "Paste from the start of the cursor";
-    # }
-    # {
-    #   mode = ["n" "v"];
-    #   key = "<leader>y";
-    #   action = "\"+ygv<Esc>";
-    #   desc = "Copy to system clipboard";
-    # }
-    # {
-    #   mode = ["n" "v"];
-    #   key = "<leader>Y";
-    #   action = "\"+Ygv<Esc>";
-    #   desc = "Copy to system clipboard";
-    # }
-    # {
-    #   mode = ["n" "v"];
-    #   key = "<leader>p";
-    #   action = "h\"+pl";
-    #   desc = "Paste from system clipboard";
-    # }
-    # {
-    #   mode = ["n" "v"];
-    #   key = "<leader>P";
-    #   action = "h\"+Pl";
-    #   desc = "Paste from system clipboard";
-    # }
+    {
+      mode = "v";
+      key = "y";
+      action = "ygv<Esc>";
+      silent = true;
+      desc = "Return to original position after yank";
+    }
+    {
+      mode = "v";
+      key = "<leader>y";
+      action = "\"+ygv<Esc>";
+      desc = "Copy to system clipboard";
+    }
+    {
+      mode = "n";
+      key = "<leader>y";
+      action = "\"+yy";
+      desc = "Copy to system clipboard";
+    }
+    {
+      mode = "v";
+      key = "<leader>Y";
+      action = "\"+Ygv<Esc>";
+      desc = "Copy to system clipboard";
+    }
+    {
+      mode = "n";
+      key = "<leader>Y";
+      action = "\"+Y";
+      desc = "Copy to system clipboard";
+    }
+    {
+      mode = ["n" "v"];
+      key = "<leader>p";
+      action = "\"+p";
+      desc = "Paste from system clipboard";
+    }
+    {
+      mode = ["n" "v"];
+      key = "<leader>P";
+      action = "\"+P";
+      desc = "Paste from system clipboard";
+    }
 
     {
       mode = ["n" "v"];
