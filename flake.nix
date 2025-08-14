@@ -25,6 +25,7 @@
             ./neovide.nix
             ./keymaps.nix
             ./plugins
+            ./visuals
           ];
         }).neovim;
     });
