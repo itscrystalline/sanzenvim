@@ -20,6 +20,13 @@
       silent = true;
       desc = "Quit all";
     }
+    {
+      mode = "n";
+      key = "<leader>QQ";
+      action = "<cmd>quitall!<cr><esc>";
+      silent = true;
+      desc = "Quit all";
+    }
 
     # Toggle
     {
@@ -121,25 +128,6 @@
       desc = "Allow <S-Up> and <S-Down> to keep the cursor in the middle";
     }
 
-    # Remap for dealing with word wrap and adding jumps to the jumplist.
-    {
-      mode = "n";
-      key = "j";
-      action = "
-        [[(v:count > 1 ? 'm`' . v:count : 'g') . 'j']]
-      ";
-      expr = true;
-      desc = "Remap for dealing with word wrap and adding jumps to the jumplist.";
-    }
-    {
-      mode = "n";
-      key = "k";
-      action = "
-        [[(v:count > 1 ? 'm`' . v:count : 'g') . 'k']]
-      ";
-      expr = true;
-      desc = "Remap for dealing with word wrap and adding jumps to the jumplist.";
-    }
     {
       mode = "n";
       key = "n";
