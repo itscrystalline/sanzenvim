@@ -110,5 +110,6 @@ in {
     "cursorword"
     "icons"
     "surround"
+    "pairs"
   ];
 }
