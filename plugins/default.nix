@@ -6,7 +6,6 @@
   ...
 }: {
   imports = [
-    ./catppuccin.nix
   ];
   vim.lazy = {
     enable = true;
