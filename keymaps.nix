@@ -15,17 +15,17 @@
     }
     {
       mode = "n";
-      key = "<leader>qq";
+      key = "<leader>q";
       action = "<cmd>quitall<cr><esc>";
       silent = true;
       desc = "Quit all";
     }
     {
       mode = "n";
-      key = "<leader>QQ";
+      key = "<leader>Q";
       action = "<cmd>quitall!<cr><esc>";
       silent = true;
-      desc = "Quit all";
+      desc = "Quit all (don't save)";
     }
 
     # Toggle
