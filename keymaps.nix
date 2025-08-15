@@ -224,7 +224,7 @@
     }
     {
       mode = "n";
-      key = "<leader>nv";
+      key = "<leader>nf";
       action = ":ToggleTerm direction=float";
       desc = "Open Vertical Terminal";
       silent = true;
