@@ -24,7 +24,6 @@
             ./options.nix
             ./neovide.nix
             ./keymaps.nix
-            ./plugins
             ./visuals
             ./utilities
             ./lauguages
