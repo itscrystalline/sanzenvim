@@ -1,15 +1,16 @@
-{
-  # pkgs,
-  lib,
-  # config,
-  # options,
-  ...
-}: {
+{...}: {
   vim.lazy.plugins.catppuccin = {
     package = "catppuccin";
     after = ''
       require("catppuccin").setup({
         auto_integrations = true,
+        integrations = {
+          indent_blankline = {
+            enabled = true,
+            scope_color = "pink",
+            colored_indent_levels = true,
+          },
+        },
         flavor = "mocha",
         dim_inactive = {
           enabled = true,
@@ -30,6 +31,9 @@
             lualine_a_normal = { bg = colors.pink },
             lualine_b_normal = { fg = colors.pink },
             lualine_c_normal = { fg = colors.pink },
+            DiffAdd = { fg = colors.green },
+            DiffChange = { fg = colors.flamingo },
+            DiffDelete = { fg = colors.red },
           }
         end
       })

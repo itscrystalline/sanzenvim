@@ -34,7 +34,7 @@
     mappings = {
       buffers = "<leader>bf";
       diagnostics = "cD";
-      findFiles = "<leader>ff";
+      findFiles = "<leader><leader>";
       liveGrep = "<leader>fw";
       lspDefinitions = "gd";
       lspDocumentSymbols = "gs";

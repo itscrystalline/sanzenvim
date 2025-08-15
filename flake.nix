@@ -20,6 +20,7 @@
       packages.default =
         (nvf.lib.neovimConfiguration {
           inherit pkgs;
+          extraSpecialArgs = {inherit nvf;};
           modules = [
             ./options.nix
             ./neovide.nix
@@ -27,6 +28,8 @@
             ./visuals
             ./utilities
             ./lauguages
+
+            ./lua-post.nix
           ];
         }).neovim;
     });
