@@ -52,7 +52,7 @@ in {
       enable = true;
       friendly-snippets.enable = true;
       mappings = {
-        close = "<ESC>";
+        close = "<C-ESC>";
         complete = "<C-Space>";
         confirm = "<CR>";
         next = "<Tab>";
