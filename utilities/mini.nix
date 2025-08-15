@@ -111,5 +111,9 @@ in {
     "icons"
     "surround"
     "pairs"
+    {
+      name = "notify";
+      opts.lsp_progress.enable = false;
+    }
   ];
 }
