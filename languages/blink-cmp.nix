@@ -62,7 +62,20 @@ in {
       };
       setupOpts = {
         cmdline.keymap.preset = "default";
-        completion.documentation.auto_show_delay_ms = 50;
+        completion = {
+          documentation.auto_show_delay_ms = 50;
+          ghost_text.enabled = true;
+          menu.draw.columns = lib.mkLuaInline ''
+            {
+              { "kind_icon" },
+              { "label", "label_description", gap = 1 },
+              { "kind" }
+            }
+          '';
+        };
+        signature = {
+          enabled = true;
+        };
         sources.default = [
           "lsp"
           "path"

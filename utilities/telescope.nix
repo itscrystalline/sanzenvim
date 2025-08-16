@@ -40,7 +40,7 @@
       lspDocumentSymbols = "gs";
       lspImplementations = "gi";
       lspReferences = "gr";
-      lspTypeDefinitions = "gD";
+      lspTypeDefinitions = "gt";
       lspWorkspaceSymbols = "gS";
     };
     setupOpts = {

@@ -109,7 +109,20 @@ in {
     "comment"
     "cursorword"
     "icons"
-    "surround"
+    {
+      name = "surround";
+      opts.mappings = {
+        add = "ys";
+        delete = "ds";
+        find = "sf";
+        find_left = "sF";
+        highlight = "hs";
+        replace = "cs";
+        update_n_lines = "sn";
+        suffix_last = "l";
+        suffix_next = "n";
+      };
+    }
     "pairs"
     {
       name = "notify";

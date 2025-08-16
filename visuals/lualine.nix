@@ -1,6 +1,11 @@
 {...}: {
   vim.statusline.lualine = {
     enable = true;
+    disabledFiletypes = [
+      "alpha"
+      "winbar"
+      "statusline"
+    ];
     activeSection = {
       a = [
         ''
@@ -122,17 +127,6 @@
           {
             "progress",
             separator = {left = ''}
-          }
-        ''
-        ''
-          {
-            "fileformat",
-            color = {fg='black'},
-            symbols = {
-              unix = '', -- e712
-              dos = '',  -- e70f
-              mac = '',  -- e711
-            }
           }
         ''
       ];

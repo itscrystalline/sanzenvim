@@ -1,10 +1,4 @@
-{
-  # pkgs,
-  # lib,
-  # config,
-  # options,
-  ...
-}: {
+{...}: {
   vim.keymaps = [
     {
       mode = "n";
@@ -15,7 +9,7 @@
     }
     {
       mode = "n";
-      key = "<leader>q";
+      key = "<leader>qq";
       action = "<cmd>quitall<cr><esc>";
       silent = true;
       desc = "Quit all";
@@ -130,6 +124,55 @@
 
     {
       mode = "n";
+      key = "<C-h>";
+      action = "<C-w>h";
+      desc = "Focus left window";
+    }
+    {
+      mode = "n";
+      key = "<C-Left>";
+      action = "<C-w>h";
+      desc = "Focus left window";
+    }
+    {
+      mode = "n";
+      key = "<C-j>";
+      action = "<C-w>j";
+      desc = "Focus bottom window";
+    }
+    {
+      mode = "n";
+      key = "<C-Down>";
+      action = "<C-w>j";
+      desc = "Focus bottom window";
+    }
+    {
+      mode = "n";
+      key = "<C-k>";
+      action = "<C-w>k";
+      desc = "Focus left window";
+    }
+    {
+      mode = "n";
+      key = "<C-Up>";
+      action = "<C-w>k";
+      desc = "Focus top window";
+    }
+    {
+      mode = "n";
+      key = "<C-l>";
+      action = "<C-w>l";
+      desc = "Focus right window";
+    }
+    {
+      mode = "n";
+      key = "<C-Right>";
+      action = "<C-w>l";
+      desc = "Focus right window";
+    }
+
+    {
+      mode = "n";
       key = "n";
       action = "nzzzv";
       desc = "Allow search terms to stay in the middle";
@@ -237,6 +280,36 @@
       lua = true;
       desc = "Open Zoxide";
       silent = true;
+    }
+
+    # LSP
+    {
+      mode = "n";
+      key = "cn";
+      action = ":Navbuddy<CR>";
+      desc = "Open Navbuddy";
+      silent = true;
+    }
+    {
+      mode = "n";
+      key = "cr";
+      action = ":Lspsaga rename<CR>";
+      desc = "Open Navbuddy";
+      silent = true;
+    }
+    {
+      mode = "n";
+      key = "]d";
+      action = ":Lspsaga diagnostic_jump_next<CR>";
+      silent = true;
+      desc = "Next Diagnostic";
+    }
+    {
+      mode = "n";
+      key = "[d";
+      action = ":Lspsaga diagnostic_jump_previous<CR>";
+      silent = true;
+      desc = "Previous Diagnostic";
     }
   ];
 }

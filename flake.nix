@@ -27,7 +27,7 @@
             ./keymaps.nix
             ./visuals
             ./utilities
-            ./lauguages
+            ./languages
 
             ./lua-post.nix
           ];

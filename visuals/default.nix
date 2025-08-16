@@ -8,5 +8,6 @@
     ./bufferline.nix
     ./alpha.nix
     ./lualine.nix
+    ./nvim-navic-breadcrumbs.nix
   ];
 }

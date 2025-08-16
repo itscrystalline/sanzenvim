@@ -26,6 +26,7 @@
         border = "curved";
         zindex = 100;
       };
+      winbar.enabled = false;
     };
   };
 }
