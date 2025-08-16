@@ -20,7 +20,7 @@
       };
 
       float = {
-        padding = 2;
+        padding = 5;
         max_width = 0; # ''math.ceil(vim.o.lines * 0.8 - 4)'';
         max_height = 0; # ''math.ceil(vim.o.columns * 0.8)'';
         border = "rounded"; # 'single' | 'double' | 'shadow' | 'curved' | ... other options supported by win open

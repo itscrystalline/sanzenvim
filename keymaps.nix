@@ -299,6 +299,13 @@
     }
     {
       mode = "n";
+      key = "K";
+      action = ":Lspsaga hover_doc<CR>";
+      desc = "Open Docs";
+      silent = true;
+    }
+    {
+      mode = "n";
       key = "]d";
       action = ":Lspsaga diagnostic_jump_next<CR>";
       silent = true;
@@ -310,6 +317,20 @@
       action = ":Lspsaga diagnostic_jump_previous<CR>";
       silent = true;
       desc = "Previous Diagnostic";
+    }
+    {
+      mode = "n";
+      key = "<leader>ut";
+      action = ''
+        function()
+          local enabled = not vim.lsp.inlay_hint.is_enabled()
+          vim.lsp.inlay_hint.enable(enabled)
+          vim.notify("Inlay Hints " .. (enabled and "on" or "off"))
+        end
+      '';
+      silent = true;
+      lua = true;
+      desc = "Toggle inlay hints";
     }
   ];
 }

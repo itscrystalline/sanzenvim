@@ -124,9 +124,5 @@ in {
       };
     }
     "pairs"
-    {
-      name = "notify";
-      opts.lsp_progress.enable = false;
-    }
   ];
 }
