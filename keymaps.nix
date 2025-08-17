@@ -22,6 +22,50 @@
       desc = "Quit all (don't save)";
     }
 
+    # windows
+    {
+      mode = "n";
+      key = "<leader>ww";
+      action = "<C-W>p";
+      silent = true;
+      desc = "Other window";
+    }
+    {
+      mode = "n";
+      key = "<leader>wq";
+      action = "<C-W>c";
+      silent = true;
+      desc = "Delete window";
+    }
+    {
+      mode = "n";
+      key = "<leader>w-";
+      action = "<C-W>s";
+      silent = true;
+      desc = "Split window below";
+    }
+    {
+      mode = "n";
+      key = "<leader>w|";
+      action = "<C-W>v";
+      silent = true;
+      desc = "Split window right";
+    }
+    {
+      mode = "n";
+      key = "<leader>-";
+      action = "<C-W>s";
+      silent = true;
+      desc = "Split window below";
+    }
+    {
+      mode = "n";
+      key = "<leader>|";
+      action = "<C-W>v";
+      silent = true;
+      desc = "Split window right";
+    }
+
     # Toggle
     {
       mode = "n";
@@ -261,14 +305,14 @@
     {
       mode = "n";
       key = "<leader>nv";
-      action = ":ToggleTerm direction=vertical";
+      action = ":ToggleTerm direction=vertical<CR>";
       desc = "Open Vertical Terminal";
       silent = true;
     }
     {
       mode = "n";
       key = "<leader>nf";
-      action = ":ToggleTerm direction=float";
+      action = ":ToggleTerm direction=float<CR>";
       desc = "Open Vertical Terminal";
       silent = true;
     }

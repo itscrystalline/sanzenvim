@@ -16,6 +16,10 @@
     ./lua.nix
     ./php.nix
     ./csharp.nix
+    ./yaml-json.nix
+    ./java.nix
+    ./kotlin.nix
+    ./assembly.nix
   ];
   vim = {
     languages = {

@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   vim.languages.markdown = {
     enable = true;
     extensions.markview-nvim = {
@@ -8,4 +8,7 @@
       };
     };
   };
+
+  # vim.treesitter.grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+  # ];
 }

@@ -4,6 +4,7 @@
     ./mini.nix
     ./telescope.nix
     ./direnv.nix
+    ./nvim-tree.nix
     ./terminal
   ];
 }

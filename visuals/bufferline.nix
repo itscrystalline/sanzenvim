@@ -2,7 +2,7 @@
   vim.tabline.nvimBufferline = {
     enable = true;
     mappings = {
-      closeCurrent = "<leader>bd";
+      closeCurrent = "<leader>bq";
       cycleNext = "<Tab>";
       cyclePrevious = "<S-Tab>";
       moveNext = "<leader>bn";
@@ -24,6 +24,7 @@
         #   end
         # '';
         separator_style = "thick";
+        numbers = "none";
       };
     };
   };
