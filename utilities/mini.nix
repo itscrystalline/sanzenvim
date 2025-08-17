@@ -15,7 +15,6 @@
     minis);
 in {
   vim.mini = enable [
-    "ai"
     "align"
     "bracketed"
     {
