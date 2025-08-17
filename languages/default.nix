@@ -37,7 +37,6 @@
         codeAction = "ca";
         format = "cf";
         goToDefinition = "gD";
-        hover = "ch";
       };
     };
     diagnostics = {

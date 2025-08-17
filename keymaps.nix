@@ -343,6 +343,27 @@
     }
     {
       mode = "n";
+      key = "ca";
+      action = ":lua vim.lsp.buf.code_action()<CR>";
+      desc = "Code actions";
+      silent = true;
+    }
+    {
+      mode = "n";
+      key = "cf";
+      action = ":lua vim.lsp.buf.format()<CR>";
+      desc = "Format code";
+      silent = true;
+    }
+    {
+      mode = "n";
+      key = "gD";
+      action = ":lua vim.lsp.buf.definition()<CR>";
+      desc = "Goto definition";
+      silent = true;
+    }
+    {
+      mode = "n";
       key = "K";
       action = ":Lspsaga hover_doc<CR>";
       desc = "Open Docs";

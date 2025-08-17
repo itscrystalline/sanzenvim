@@ -18,7 +18,12 @@
         open_cmd = "!zen"; # Choose your browser
         open_link = "gx";
       };
-      rename.in_select = false;
+      rename = {
+        in_select = false;
+        keys = {
+          quit = ["q" "<ESC>"];
+        };
+      };
     };
   };
 }
