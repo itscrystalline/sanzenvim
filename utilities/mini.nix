@@ -123,5 +123,6 @@ in {
       };
     }
     "pairs"
+    "hipatterns"
   ];
 }

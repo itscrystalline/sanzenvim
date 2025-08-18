@@ -10,5 +10,6 @@
     ./lualine.nix
     ./nvim-navic-breadcrumbs.nix
     ./gitsigns.nix
+    ./treesitter-context.nix
   ];
 }

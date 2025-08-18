@@ -385,6 +385,18 @@
     }
     {
       mode = "n";
+      key = "[c";
+      action = ''
+        function()
+          require("treesitter-context").go_to_context(vim.v.count1)
+        end
+      '';
+      lua = true;
+      silent = true;
+      desc = "Previous scope";
+    }
+    {
+      mode = "n";
       key = "<leader>ut";
       action = ''
         function()
