@@ -34,6 +34,7 @@ in {
       formatters_by_ft = lib.mergeAttrsList [
         (mkFmt "lua" ["stylua"])
         (mkFmt "nix" ["alejandra"])
+        (mkFmt "rust" ["rustfmt"])
       ];
     };
   };
