@@ -22,6 +22,14 @@
       desc = "Quit all (don't save)";
     }
 
+    {
+      mode = "n";
+      key = "<Esc><Esc>";
+      action = ":let @/=\"\"<CR>";
+      silent = true;
+      desc = "Clear search highlights";
+    }
+
     # windows
     {
       mode = "n";
