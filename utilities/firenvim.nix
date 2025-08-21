@@ -28,6 +28,7 @@
       "https://www.messenger.com"
       "https://nc.iw2tryhard.dev"
       "https://chatgpt.com"
+      "https://classroom.google.com"
     ];
 in {
   vim.extraPlugins.firenvim = {
