@@ -24,7 +24,7 @@
 
     {
       mode = "n";
-      key = "<Esc><Esc>";
+      key = "<leader>s";
       action = ":let @/=\"\"<CR>";
       silent = true;
       desc = "Clear search highlights";
