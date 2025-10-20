@@ -1,9 +1,11 @@
 {
-  pkgs,
+  lib,
+  full,
   my-nur,
+  pkgs,
   ...
 }: {
-  vim = {
+  vim = lib.mkIf full {
     lsp.servers.veridian = {
       autostart = true;
       cmd = ["${my-nur.packages.${pkgs.system}.veridian}"];

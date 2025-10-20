@@ -1,3 +1,3 @@
-{...}: {
-  vim.languages.java.enable = true;
+{full, ...}: {
+  vim.languages.java.enable = full;
 }

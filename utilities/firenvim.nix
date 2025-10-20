@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  full,
   ...
 }: let
   inherit (lib.nvim.lua) toLuaObject;
@@ -31,7 +32,7 @@
       "https://classroom.google.com"
     ];
 in {
-  vim.extraPlugins.firenvim = {
+  vim.extraPlugins.firenvim = lib.mkIf full {
     package = pkgs.vimPlugins.firenvim.overrideAttrs {
       src = pkgs.fetchFromGitHub {
         owner = "glacambre";

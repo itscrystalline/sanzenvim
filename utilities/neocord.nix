@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  full,
   ...
 }: let
   inherit (lib.nvim.dag) entryAnywhere;
@@ -15,7 +16,7 @@ in {
   # vim.presence.neocord = {
   #   enable = true;
   # };
-  vim.startPlugins = [
+  vim.startPlugins = lib.optionals full [
     (pkgs.vimPlugins.neocord.overrideAttrs {
       src = fetchFromGitHub {
         owner = "itscrystalline";
@@ -25,9 +26,10 @@ in {
       };
     })
   ];
-
-  vim.pluginRC.neocord = entryAnywhere ''
-    -- Description of each option can be found in https://github.com/IogaMaster/neocord#lua
-    require("neocord").setup(${toLuaObject setupOpts})
-  '';
+  vim.pluginRC = lib.mkIf full {
+    neocord = entryAnywhere ''
+      -- Description of each option can be found in https://github.com/IogaMaster/neocord#lua
+      require("neocord").setup(${toLuaObject setupOpts})
+    '';
+  };
 }

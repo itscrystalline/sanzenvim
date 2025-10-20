@@ -15,14 +15,14 @@
     nvf,
     my-nur,
     ...
-  } @ inputs:
+  }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {inherit system;};
-    in {
-      packages.default =
+
+      nvim = full:
         (nvf.lib.neovimConfiguration {
           inherit pkgs;
-          extraSpecialArgs = {inherit nvf my-nur;};
+          extraSpecialArgs = {inherit nvf my-nur full;};
           modules = [
             ./options.nix
             ./neovide.nix
@@ -34,5 +34,8 @@
             ./lua-post.nix
           ];
         }).neovim;
+    in {
+      packages.default = nvim true;
+      packages.mini = nvim false;
     });
 }

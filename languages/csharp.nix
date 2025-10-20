@@ -1,10 +1,6 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
+{full, ...}: {
   vim.languages.csharp = {
-    enable = true;
+    enable = full;
     lsp.servers = "roslyn_ls";
   };
 }

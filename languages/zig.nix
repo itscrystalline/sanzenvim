@@ -1,3 +1,3 @@
-{...}: {
-  vim.languages.zig.enable = true;
+{full, ...}: {
+  vim.languages.zig.enable = full;
 }

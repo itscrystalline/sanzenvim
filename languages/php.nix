@@ -1,3 +1,3 @@
-{...}: {
-  vim.languages.php.enable = true;
+{full, ...}: {
+  vim.languages.php.enable = full;
 }

@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  full,
   ...
 }: let
   asm-lsp = pkgs.asm-lsp.overrideAttrs (final: prev: {
@@ -19,6 +20,6 @@
     });
   });
 in {
-  vim.languages.assembly.enable = true;
-  vim.lsp.servers.asm-lsp.cmd = lib.mkForce [(lib.getExe asm-lsp)];
+  vim.languages.assembly.enable = full;
+  vim.lsp.servers.asm-lsp.cmd = lib.mkIf full (lib.mkForce [(lib.getExe asm-lsp)]);
 }

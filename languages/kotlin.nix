@@ -1,3 +1,3 @@
-{...}: {
-  vim.languages.kotlin.enable = true;
+{full, ...}: {
+  vim.languages.kotlin.enable = full;
 }

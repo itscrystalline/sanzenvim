@@ -1,6 +1,10 @@
-{...}: {
+{
+  full,
+  lib,
+  ...
+}: {
   vim.debugger.nvim-dap = {
-    enable = true;
+    enable = lib.mkForce full;
     ui = {
       enable = true;
       autoStart = true;
