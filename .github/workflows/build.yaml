@@ -40,7 +40,7 @@ jobs:
 
     - name: Build Mini 
       run: |
-        nix build .#mini -L 2>&1
+        nix bundle --bundler github:DavHau/nix-portable -o bundle .#mini -L 2>&1
 
     - name: Upload Nix build artifacts
       uses: actions/upload-artifact@v4
@@ -78,7 +78,7 @@ jobs:
 
     - name: Build Full 
       run: |
-        nix build .# -L 2>&1
+        nix bundle --bundler github:DavHau/nix-portable -o bundle .# -L 2>&1
 
     - name: Upload Nix build artifacts
       uses: actions/upload-artifact@v4
