@@ -1,0 +1,86 @@
+# .github/workflows/build.yml
+name: Build Executable
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - .github/**
+      - README.md
+
+jobs:
+  build-mini:
+    name: Build Bundle (Mini)
+    runs-on: ${{ matrix.platform.on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: 
+          - on: ubuntu-latest 
+            name: linux-x86_64
+          - on: ubuntu-24.04-arm 
+            name: linux-aarch64
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Nix
+      uses: cachix/install-nix-action@v30
+      with:
+        nix_path: nixpkgs=channel:nixos-25.05
+
+    - name: Set up Cachix cache
+      uses: cachix/cachix-action@v15
+      with:
+        name: sanzenvim 
+
+    - name: Build Mini 
+      run: |
+        nix build .#mini -L 2>&1
+
+    - name: Upload Nix build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: sanzenvim-mini 
+        path: |
+          bundle/bin/nvim
+
+  build-full:
+    name: Build Bundle (Full)
+    runs-on: ${{ matrix.platform.on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: 
+          - on: ubuntu-latest 
+            name: linux-x86_64
+          - on: ubuntu-24.04-arm 
+            name: linux-aarch64
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Nix
+      uses: cachix/install-nix-action@v30
+      with:
+        nix_path: nixpkgs=channel:nixos-25.05
+
+    - name: Set up Cachix cache
+      uses: cachix/cachix-action@v15
+      with:
+        name: sanzenvim 
+
+    - name: Build Full 
+      run: |
+        nix build .# -L 2>&1
+
+    - name: Upload Nix build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: sanzenvim
+        path: |
+          bundle/bin/nvim

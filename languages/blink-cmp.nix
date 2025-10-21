@@ -112,4 +112,5 @@ in {
         }
       ]
     );
+  vim.extraPackages = [pkgs.ripgrep];
 }
