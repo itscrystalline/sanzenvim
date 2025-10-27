@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  full,
   ...
 }: let
   deepMergeWithLists = lhs: rhs:
@@ -67,7 +68,11 @@ in {
           ghost_text.enabled = true;
           menu.draw.columns = lib.mkLuaInline ''
             {
-              { "kind_icon" },
+              ${
+              if full
+              then ''{ "kind_icon" },''
+              else ""
+            }
               { "label", "label_description", gap = 1 },
               { "kind" }
             }

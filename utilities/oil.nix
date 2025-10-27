@@ -1,11 +1,16 @@
-{...}: {
+{
+  lib,
+  full,
+  ...
+}: {
   vim.utility.oil-nvim = {
     enable = true;
     setupOpts = {
-      columns = [
-        "icon"
-        "size"
-      ];
+      columns =
+        lib.optionals full ["icon"]
+        ++ [
+          "size"
+        ];
       delete_to_trash = true;
       use_default_keymaps = true;
       watch_for_changes = true;

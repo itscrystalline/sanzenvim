@@ -1,4 +1,8 @@
-{lib, ...}: let
+{
+  lib,
+  full,
+  ...
+}: let
   inherit (lib) mkLuaInline;
   padding = val: {
     type = "padding";
@@ -31,7 +35,11 @@ in {
       (padding 6)
       {
         type = "button";
-        val = "  Zoxide";
+        val = "${
+          if full
+          then "  "
+          else ""
+        }Zoxide";
         on_press = mkLuaInline "function() require('telescope').extensions.zoxide.list() end";
         opts = {
           # hl = "comment";
@@ -57,7 +65,11 @@ in {
       (padding 1)
       {
         type = "button";
-        val = "  Find File";
+        val = "${
+          if full
+          then "  "
+          else ""
+        }Find File";
         on_press = mkLuaInline "function() require('telescope.builtin').find_files() end";
         opts = {
           # hl = "comment";
@@ -83,7 +95,11 @@ in {
       (padding 1)
       {
         type = "button";
-        val = mkLuaInline "require('mini.icons').get('directory', vim.fn.getcwd()) .. '  Open Directory'";
+        val = mkLuaInline "${
+          if full
+          then ''require('mini.icons').get('directory', vim.fn.getcwd()) ..''
+          else ""
+        }'  Open Directory'";
         on_press = mkLuaInline "function() require('telescope.builtin').find_files() end";
         opts = {
           # hl = "comment";
@@ -109,7 +125,11 @@ in {
       (padding 1)
       {
         type = "button";
-        val = "  New File";
+        val = "${
+          if full
+          then "  "
+          else ""
+        }New File";
         on_press = mkLuaInline "function() vim.cmd[[ene]] end";
         opts = {
           # hl = "comment";
@@ -135,7 +155,11 @@ in {
       (padding 1)
       {
         type = "button";
-        val = "󰈭  Find Word";
+        val = "${
+          if full
+          then "󰈭  "
+          else ""
+        }Find Word";
         on_press = mkLuaInline "function() require('telescope.builtin').live_grep() end";
         opts = {
           # hl = "comment";
@@ -161,7 +185,11 @@ in {
       (padding 1)
       {
         type = "button";
-        val = "  Quit Neovim";
+        val = "${
+          if full
+          then "  "
+          else ""
+        }Quit Neovim";
         on_press = mkLuaInline "function() vim.cmd[[qa]] end";
         opts = {
           # hl = "comment";

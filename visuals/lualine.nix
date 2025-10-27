@@ -1,4 +1,5 @@
-{...}: {
+{full, ...}: let
+in {
   vim.statusline.lualine = {
     enable = true;
     disabledFiletypes = [
@@ -11,7 +12,11 @@
         ''
           {
             "mode",
-            icons_enabled = true,
+            icons_enabled = ${
+            if full
+            then "true"
+            else "false"
+          },
             separator = {
               left = '▎',
               right = ''
@@ -24,14 +29,22 @@
           {
             "filetype",
             colored = true,
-            icon_only = true,
+            icon_only = ${
+            if full
+            then "true"
+            else "false"
+          },
             icon = { align = 'center' }
           }
         ''
         ''
           {
             "filename",
-            symbols = {modified = ' ', readonly = ' '},
+            ${
+            if full
+            then "symbols = {modified = ' ', readonly = ' '}"
+            else "symbols = {modified = 'M', readonly = 'RO'}"
+          },
             separator = {right = ''}
           }
         ''
@@ -76,9 +89,17 @@
                 table.insert(active_clients, client.name)
               end
 
-              return require("mini.icons").get("file", vim.api.nvim_buf_get_name(bufnr)) .. " " .. table.concat(active_clients, ", ")
+              return ${
+            if full
+            then ''require("mini.icons").get("file", vim.api.nvim_buf_get_name(bufnr)) .. " " ..''
+            else ""
+          } table.concat(active_clients, ", ")
             end,
-            icon = ' ',
+            ${
+            if full
+            then "icon = ' ',"
+            else "icon = 'LSP ',"
+          }
             separator = {left = ''},
           }
         ''
@@ -86,7 +107,11 @@
           {
             "diagnostics",
             sources = {'nvim_lsp', 'nvim_diagnostic', 'nvim_diagnostic', 'vim_lsp', 'coc'},
-            symbols = {error = '󰅙  ', warn = '  ', info = '  ', hint = '󰌵 '},
+            ${
+            if full
+            then "symbols = {error = '󰅙  ', warn = '  ', info = '  ', hint = '󰌵 '},"
+            else "symbols = {error = 'E ', warn = 'W ', info = 'I ', hint = 'H '},"
+          }
             colored = true,
             update_in_insert = false,
             always_visible = false,
@@ -117,7 +142,11 @@
         ''
           {
             "branch",
-            icon = ' •',
+            ${
+            if full
+            then "icon = ' •',"
+            else ""
+          }
             separator = {left = ''}
           }
         ''
