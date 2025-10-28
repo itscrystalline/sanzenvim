@@ -1,5 +1,4 @@
-{full, ...}: let
-in {
+{full, ...}: {
   vim.statusline.lualine = {
     enable = true;
     disabledFiletypes = [
@@ -18,8 +17,16 @@ in {
             else "false"
           },
             separator = {
-              left = '▎',
-              right = ''
+              left = '${
+            if full
+            then "▎"
+            else ""
+          }',
+              right = '${
+            if full
+            then ""
+            else "▒"
+          }'
             },
           }
         ''
@@ -29,7 +36,7 @@ in {
           {
             "filetype",
             colored = true,
-            icon_only = ${
+            icons_enabled = ${
             if full
             then "true"
             else "false"
@@ -45,7 +52,11 @@ in {
             then "symbols = {modified = ' ', readonly = ' '}"
             else "symbols = {modified = 'M', readonly = 'RO'}"
           },
-            separator = {right = ''}
+            separator = {right = '${
+            if full
+            then ""
+            else "▒"
+          }'}
           }
         ''
       ];
@@ -61,7 +72,11 @@ in {
               removed  = 'red', -- Changes the diff's removed color you
             },
             symbols = {added = '+', modified = '~', removed = '-'}, -- Changes the diff symbols
-            separator = {right = ''}
+            separator = {right = '${
+            if full
+            then ""
+            else "▒"
+          }'}
           }
         ''
       ];
@@ -98,9 +113,13 @@ in {
             ${
             if full
             then "icon = ' ',"
-            else "icon = 'LSP ',"
+            else "icon = 'LSP',"
           }
-            separator = {left = ''},
+            separator = {left = '${
+            if full
+            then ""
+            else "▒"
+          }'},
           }
         ''
         ''
@@ -128,7 +147,15 @@ in {
           {
             "",
             draw_empty = true,
-            separator = { left = '', right = '' }
+            separator = { left = '${
+            if full
+            then ""
+            else "▒"
+          }', right = '${
+            if full
+            then ""
+            else "▒"
+          }' }
           }
         ''
         ''
@@ -136,18 +163,26 @@ in {
             'searchcount',
             maxcount = 999,
             timeout = 120,
-            separator = {left = ''}
+            separator = {left = '${
+            if full
+            then ""
+            else "▒"
+          }'}
           }
         ''
         ''
           {
             "branch",
-            ${
+            icons_enabled = ${
             if full
-            then "icon = ' •',"
-            else ""
-          }
-            separator = {left = ''}
+            then "true"
+            else "false"
+          },
+            separator = {left = '${
+            if full
+            then ""
+            else "▒"
+          }'}
           }
         ''
       ];
@@ -155,7 +190,11 @@ in {
         ''
           {
             "progress",
-            separator = {left = ''}
+            separator = {left = '${
+            if full
+            then ""
+            else "▒"
+          }'}
           }
         ''
       ];

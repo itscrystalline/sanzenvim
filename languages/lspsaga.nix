@@ -1,21 +1,24 @@
-{...}: {
+{full, ...}: {
   vim.lsp.lspsaga = {
     enable = true;
     setupOpts = {
       ui = {
         border = "rounded"; # One of none, single, double, rounded, solid, shadow
-        code_action = "💡"; # Can be any symbol you want 💡
+        code_action =
+          if full
+          then "💡"
+          else "!!"; # Can be any symbol you want 💡
       };
       diagnostic = {
         border_follow = true;
         diagnostic_only_current = false;
         show_code_action = true;
         keys = {
-          quit = ["q" "<ESC>"];
+          quit = ["<ESC>"];
         };
       };
       hover = {
-        open_cmd = "!zen"; # Choose your browser
+        open_cmd = "!xdg-open"; # Choose your browser
         open_link = "gx";
       };
       rename = {

@@ -97,9 +97,9 @@ in {
         type = "button";
         val = mkLuaInline "${
           if full
-          then ''require('mini.icons').get('directory', vim.fn.getcwd()) ..''
+          then ''require('mini.icons').get('directory', vim.fn.getcwd()) .. "  " ..''
           else ""
-        }'  Open Directory'";
+        }'Open Directory'";
         on_press = mkLuaInline "function() require('telescope.builtin').find_files() end";
         opts = {
           # hl = "comment";

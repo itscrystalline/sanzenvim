@@ -30,6 +30,8 @@
       "https://nc.iw2tryhard.dev"
       "https://chatgpt.com"
       "https://classroom.google.com"
+      "https://app.slack.com"
+      "https://deepl.com"
     ];
 in {
   vim.extraPlugins.firenvim = lib.mkIf full {
