@@ -20,6 +20,7 @@
     ./java.nix
     ./kotlin.nix
     ./assembly.nix
+    ./r.nix
   ];
   vim = {
     languages = {
