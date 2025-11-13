@@ -14,7 +14,7 @@
         diagnostic_only_current = false;
         show_code_action = true;
         keys = {
-          quit = ["<ESC>"];
+          quit = ["q" "<ESC>"];
         };
       };
       hover = {
@@ -22,9 +22,9 @@
         open_link = "gx";
       };
       rename = {
-        in_select = false;
+        in_select = true;
         keys = {
-          quit = ["q" "<ESC>"];
+          quit = ["<ESC>"];
         };
       };
     };

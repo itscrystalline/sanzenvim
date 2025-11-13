@@ -387,7 +387,7 @@
     {
       mode = "n";
       key = "[d";
-      action = ":Lspsaga diagnostic_jump_previous<CR>";
+      action = ":Lspsaga diagnostic_jump_prev<CR>";
       silent = true;
       desc = "Previous Diagnostic";
     }
