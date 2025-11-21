@@ -11,5 +11,6 @@
     ./nvim-navic-breadcrumbs.nix
     ./gitsigns.nix
     ./treesitter-context.nix
+    ./nvim-highlight-colors.nix
   ];
 }
