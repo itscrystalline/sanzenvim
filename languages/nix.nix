@@ -1,10 +1,7 @@
-{pkgs, ...}: {
+{...}: {
   vim.languages.nix = {
     enable = true;
-    format = {
-      package = pkgs.alejandra;
-      type = "alejandra";
-    };
+    format.type = ["alejandra"];
     lsp = {
       enable = true;
     };

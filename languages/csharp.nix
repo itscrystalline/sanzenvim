@@ -1,6 +1,6 @@
 {full, ...}: {
   vim.languages.csharp = {
     enable = full;
-    lsp.servers = "roslyn_ls";
+    lsp.servers = ["roslyn_ls"];
   };
 }

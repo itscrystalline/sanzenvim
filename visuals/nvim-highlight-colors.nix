@@ -1,4 +1,4 @@
-_: {
+{...}: {
   vim.ui.nvim-highlight-colors = {
     enable = true;
     setupOpts = {

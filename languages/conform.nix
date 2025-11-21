@@ -1,4 +1,9 @@
-{lib, ...}: let
+{
+  pkgs,
+  lib,
+  full,
+  ...
+}: let
   mkFmt = lang: list:
     if builtins.isAttrs (lib.last list)
     then
@@ -38,4 +43,5 @@ in {
       ];
     };
   };
+  vim.extraPackages = lib.optionals full [pkgs.stylua pkgs.alejandra pkgs.rustfmt];
 }
