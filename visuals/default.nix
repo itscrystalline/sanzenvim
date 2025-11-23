@@ -12,5 +12,6 @@
     ./gitsigns.nix
     ./treesitter-context.nix
     ./nvim-highlight-colors.nix
+    ./pets.nix
   ];
 }
