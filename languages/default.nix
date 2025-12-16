@@ -21,6 +21,7 @@
     ./kotlin.nix
     ./assembly.nix
     ./r.nix
+    ./typst.nix
   ];
   vim = {
     languages = {
