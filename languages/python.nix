@@ -6,9 +6,10 @@
   vim.languages.python = {
     enable = true;
     lsp.enable = false;
+    format.type = ["ruff"];
   };
-  vim.lsp.servers.basedpyright = {
-    cmd = lib.mkForce ["${pkgs.basedpyright}/bin/basedpyright-langserver" "--stdio"];
+  vim.lsp.servers.ty = {
+    cmd = lib.mkForce [(lib.getExe pkgs.ty) "server"];
     filetypes = ["python"];
     root_markers = [
       "pyproject.toml"
@@ -19,14 +20,11 @@
       "pyrightconfig.json"
       ".git"
     ];
-    settings = {
-      basedpyright = {
-        analysis = {
-          autoSearchPaths = true;
-          useLibraryCodeForTypes = true;
-          diagnosticMode = "openFilesOnly";
-        };
-      };
+    # capabilities = [
+    # ];
+    settings.ty = {
+      completions.autoImport = true;
+      inlayHints.variableTypes = true;
     };
   };
 }

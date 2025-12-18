@@ -8,7 +8,7 @@
   vim = lib.mkIf full {
     lsp.servers.veridian = {
       autostart = true;
-      cmd = ["${my-nur.packages.${pkgs.system}.veridian}"];
+      cmd = ["${my-nur.packages.${pkgs.hostsys}.veridian}"];
       filetypes = ["systemverilog" "verilog" "sv"];
       root_markers = [".git" "veridian.yml"];
     };

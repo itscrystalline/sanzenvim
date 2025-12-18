@@ -24,8 +24,9 @@
       pkgs = import nixpkgs {
         inherit system;
         overlays = [
-          (_: prev: {
-            inherit (nixpkgs-stable.legacyPackages.${prev.system}) clang-tools;
+          (_: prev: rec {
+            hostsys = prev.stdenv.hostPlatform.system;
+            inherit (nixpkgs-stable.legacyPackages.${hostsys}) clang-tools;
           })
         ];
       };
