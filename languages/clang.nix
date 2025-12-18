@@ -1,5 +1,3 @@
-{...}: {
-  vim.languages.clang = {
-    enable = true;
-  };
+{full, ...}: {
+  vim.languages.clang.enable = full;
 }

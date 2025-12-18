@@ -1,6 +1,6 @@
-{...}: {
+{full, ...}: {
   vim.languages.rust = {
-    enable = true;
+    enable = full;
     extensions.crates-nvim.enable = true;
     lsp.opts = ''
       checkOnSave = true,

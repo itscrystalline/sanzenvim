@@ -1,3 +1,3 @@
 {full, ...}: {
-  vim.languages.lua.enable = full;
+  vim.languages.lua.enable = true;
 }

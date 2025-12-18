@@ -1,8 +1,11 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }: let
+  enabled = config.vim.lsp.enable;
+
   filetypes = ["typescript" "javascript" "javascriptreact" "typescriptreact" "vue"];
   vue-language-server = lib.getExe pkgs.vue-language-server;
   vtsls = lib.getExe pkgs.vtsls;
@@ -27,7 +30,7 @@ in {
       vue
       tsx
     ];
-    lsp.servers = {
+    lsp.servers = lib.mkIf enabled {
       vtsls = {
         inherit filetypes;
         cmd = ["${vtsls}" "--stdio"];

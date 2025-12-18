@@ -13,7 +13,6 @@
           lib.mkLuaInline "default_on_attach"
         );
       };
-      jsonls.cmd = lib.mkForce ["${pkgs.vscode-langservers-extracted}/bin/vscode-json-language-server" "--stdio"];
     };
   };
 }

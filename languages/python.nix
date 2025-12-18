@@ -9,7 +9,7 @@
     format.type = ["ruff"];
   };
   vim.lsp.servers.ty = {
-    cmd = lib.mkForce [(lib.getExe pkgs.ty) "server"];
+    cmd = lib.mkDefault [(lib.getExe pkgs.ty) "server"];
     filetypes = ["python"];
     root_markers = [
       "pyproject.toml"

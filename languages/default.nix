@@ -1,4 +1,8 @@
-{...}: {
+{
+  full,
+  lib,
+  ...
+}: {
   imports = [
     ./blink-cmp.nix
     ./conform.nix
@@ -26,11 +30,11 @@
   vim = {
     languages = {
       enableTreesitter = true;
-      enableDAP = true;
+      enableDAP = full;
       enableExtraDiagnostics = true;
       enableFormat = true;
     };
-    lsp = {
+    lsp = lib.mkIf full {
       enable = true;
       lspconfig.enable = true;
       formatOnSave = true;
