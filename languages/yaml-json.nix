@@ -6,7 +6,7 @@
   vim = {
     languages.yaml.enable = true;
     languages.json.enable = true;
-    treesitter.grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [jsonc];
+    # treesitter.grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [jsonc];
     lsp.servers = {
       yaml-language-server = {
         on_attach = lib.mkForce (
