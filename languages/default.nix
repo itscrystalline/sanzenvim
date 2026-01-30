@@ -26,6 +26,7 @@
     ./assembly.nix
     ./r.nix
     ./typst.nix
+    ./qml.nix
   ];
   vim = {
     languages = {
