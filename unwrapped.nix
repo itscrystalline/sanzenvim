@@ -1,11 +1,7 @@
 # This module rewrites all explicit dependencies on language servers and
 # formatters into implicit ones, expecting them to be provided by the
 # environment (e.g. a devShell / direnv / system PATH).
-{
-  lib,
-  config,
-  ...
-}: {
+{lib, ...}: {
   vim = {
     # Override LSP server commands to use bare command names from PATH
     # instead of Nix store paths. This covers both nvf-managed servers
@@ -20,7 +16,18 @@
       # Python – custom ty server
       ty.cmd = lib.mkForce ["ty" "server"];
       # TypeScript/JavaScript – vtsls
-      vtsls.cmd = lib.mkForce ["vtsls" "--stdio"];
+      vtsls = {
+        cmd = lib.mkForce ["vtsls" "--stdio"];
+        # Remove Nix store reference to vue-language-server in the plugin location
+        settings.vtsls.tsserver.globalPlugins = lib.mkForce [
+          {
+            name = "@vue/typescript-plugin";
+            location = "vue-language-server";
+            languages = ["vue"];
+            configNamespace = "typescript";
+          }
+        ];
+      };
       # Vue
       vue_ls.cmd = lib.mkForce ["vue-language-server" "--stdio"];
       # YAML
@@ -55,6 +62,12 @@
 
     # Override Rust LSP package to use bare command from PATH
     languages.rust.lsp.package = lib.mkForce ["rust-analyzer"];
+
+    # Override typst-preview-nvim tool paths to use bare commands from PATH
+    languages.typst.extensions.typst-preview-nvim.setupOpts.dependencies_bin = lib.mkForce {
+      tinymist = "tinymist";
+      websocat = "websocat";
+    };
 
     # Override formatter commands to use bare names from PATH.
     # nvf-managed formatters set `command` to Nix store paths;
