@@ -31,23 +31,26 @@
         ];
       };
 
-      nvim = full:
+      nvim = full: extraModules:
         (nvf.lib.neovimConfiguration {
           inherit pkgs;
           extraSpecialArgs = {inherit nvf my-nur full;};
-          modules = [
-            ./options.nix
-            ./neovide.nix
-            ./keymaps.nix
-            ./visuals
-            ./utilities
-            ./languages
+          modules =
+            [
+              ./options.nix
+              ./neovide.nix
+              ./keymaps.nix
+              ./visuals
+              ./utilities
+              ./languages
 
-            ./lua-post.nix
-          ];
+              ./lua-post.nix
+            ]
+            ++ extraModules;
         }).neovim;
     in {
-      packages.default = nvim true;
-      packages.mini = nvim false;
+      packages.default = nvim true [];
+      packages.mini = nvim false [];
+      packages.unwrapped = nvim true [./unwrapped.nix];
     });
 }
