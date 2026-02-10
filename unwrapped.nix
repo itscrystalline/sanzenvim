@@ -18,11 +18,14 @@
       # TypeScript/JavaScript – vtsls
       vtsls = {
         cmd = lib.mkForce ["vtsls" "--stdio"];
-        # Remove Nix store reference to vue-language-server in the plugin location
+        # The vue-plugin location must point to the vue-language-server
+        # installation. When using the unwrapped variant, the environment
+        # should provide vue-language-server and set NODE_PATH or similar
+        # so that vtsls can resolve the plugin via standard module resolution.
         settings.vtsls.tsserver.globalPlugins = lib.mkForce [
           {
             name = "@vue/typescript-plugin";
-            location = "vue-language-server";
+            location = "";
             languages = ["vue"];
             configNamespace = "typescript";
           }
@@ -60,7 +63,9 @@
       veridian.cmd = lib.mkForce ["veridian"];
     };
 
-    # Override Rust LSP package to use bare command from PATH
+    # Override Rust LSP package to use bare command from PATH.
+    # nvf supports setting lsp.package to a list of strings, which tells
+    # rustaceanvim to discover the binary from PATH instead of bundling it.
     languages.rust.lsp.package = lib.mkForce ["rust-analyzer"];
 
     # Override typst-preview-nvim tool paths to use bare commands from PATH
