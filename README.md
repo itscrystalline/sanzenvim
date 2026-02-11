@@ -123,6 +123,19 @@ rm -rf ~/.nix-portable-sanzenvim
    ./bundle/bin/nvim --headless -c 'lua print(vim.env.PATH)' -c 'quit'
    ```
 
+### Bootstrap Issues
+
+If you encounter "Fatal error: nix is unable to build packages", see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for detailed workarounds and solutions.
+
+### Clear Cache
+
+```bash
+rm -rf ~/.cache/sanzenvim-portable
+rm -rf ~/.nix-portable-sanzenvim
+```
+
+For more detailed troubleshooting, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
+
 ## Technical Details
 
 The universal bundle uses a wrapper approach to solve nix-portable's proot sandbox limitation:
