@@ -60,7 +60,7 @@ direnv allow
 ./bundle/bin/nvim myfile.lua
 ```
 
-**How it works:** The bundle detects `/nix/store`, creates wrapper scripts in `~/.cache/sanzenvim-portable/lsp-wrappers/`, and executes host LSP binaries, bypassing the proot sandbox.
+**How it works:** The bundle detects `/nix/store`, creates wrapper scripts in `~/.cache/sanzenvim-portable/lsp-wrappers/`, and executes host LSP binaries, bypassing the proot sandbox. On Nix systems, a bootstrap workaround is **automatically applied** on first run to ensure the bundle works correctly.
 
 ### Supported LSPs (Auto-detected)
 
