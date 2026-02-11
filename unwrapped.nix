@@ -1,27 +1,27 @@
-# This module rewrites all explicit dependencies on language servers and
-# formatters into implicit ones, expecting them to be provided by the
-# environment (e.g. a devShell / direnv / system PATH).
-{lib, ...}: {
+# This module rewrites all explicit dependencies on language servers,
+# formatters, linters, and debuggers into implicit ones, expecting them
+# to be provided by the environment (e.g. a devShell / direnv / system PATH).
+{
+  lib,
+  pkgs,
+  ...
+}: {
   vim = {
-    # Override LSP server commands to use bare command names from PATH
-    # instead of Nix store paths. This covers both nvf-managed servers
-    # and custom ones defined in this config.
+    # ── LSP server commands ─────────────────────────────────────────────
+    # Override every server cmd to use a bare command name from PATH
+    # instead of a Nix store path.
     lsp.servers = {
       # Nix (nvf default: nil)
       nil.cmd = lib.mkForce ["nil"];
       # Lua (nvf default: lua-language-server)
       lua-language-server.cmd = lib.mkForce ["lua-language-server"];
-      # Clang (nvf default: clangd)
+      # C/C++ (nvf default: clangd via clang-tools)
       clangd.cmd = lib.mkForce ["clangd"];
-      # Python – custom ty server
+      # Python – custom ty server (sanzenvim)
       ty.cmd = lib.mkForce ["ty" "server"];
-      # TypeScript/JavaScript – vtsls
+      # TypeScript/JavaScript – vtsls (sanzenvim)
       vtsls = {
         cmd = lib.mkForce ["vtsls" "--stdio"];
-        # The vue-plugin location must point to the vue-language-server
-        # installation. When using the unwrapped variant, the environment
-        # should provide vue-language-server and set NODE_PATH or similar
-        # so that vtsls can resolve the plugin via standard module resolution.
         settings.vtsls.tsserver.globalPlugins = lib.mkForce [
           {
             name = "@vue/typescript-plugin";
@@ -31,9 +31,9 @@
           }
         ];
       };
-      # Vue
+      # Vue (sanzenvim)
       vue_ls.cmd = lib.mkForce ["vue-language-server" "--stdio"];
-      # YAML
+      # YAML (nvf default: yaml-language-server)
       yaml-language-server.cmd = lib.mkForce ["yaml-language-server" "--stdio"];
       # Markdown (nvf default: marksman)
       marksman.cmd = lib.mkForce ["marksman" "server"];
@@ -59,31 +59,91 @@
       jsonls.cmd = lib.mkForce ["vscode-json-language-server" "--stdio"];
       # Assembly (nvf default: asm-lsp)
       asm-lsp.cmd = lib.mkForce ["asm-lsp"];
-      # Verilog – custom veridian server
+      # Verilog – custom veridian server (sanzenvim)
       veridian.cmd = lib.mkForce ["veridian"];
     };
 
-    # Override Rust LSP package to use bare command from PATH.
-    # nvf supports setting lsp.package to a list of strings, which tells
-    # rustaceanvim to discover the binary from PATH instead of bundling it.
+    # ── Rust LSP ────────────────────────────────────────────────────────
+    # rustaceanvim accepts a list of strings to discover from PATH.
     languages.rust.lsp.package = lib.mkForce ["rust-analyzer"];
 
-    # Override typst-preview-nvim tool paths to use bare commands from PATH
+    # ── Typst preview dependencies ──────────────────────────────────────
     languages.typst.extensions.typst-preview-nvim.setupOpts.dependencies_bin = lib.mkForce {
       tinymist = "tinymist";
       websocat = "websocat";
     };
 
-    # Override formatter commands to use bare names from PATH.
-    # nvf-managed formatters set `command` to Nix store paths;
-    # we rewrite them to plain command names.
-    formatter.conform-nvim.setupOpts.formatters = {
-      alejandra.command = lib.mkForce "alejandra";
-      stylua.command = lib.mkForce "stylua";
-      rustfmt.command = lib.mkForce "rustfmt";
+    # ── Formatter commands ──────────────────────────────────────────────
+    # Override every formatter command that nvf sets to a Nix store path.
+    formatter.conform-nvim.setupOpts = {
+      formatters = {
+        # Nix
+        alejandra.command = lib.mkForce "alejandra";
+        # Lua
+        stylua.command = lib.mkForce "stylua";
+        # Rust
+        rustfmt.command = lib.mkForce "rustfmt";
+        # Typst
+        typstyle.command = lib.mkForce "typstyle";
+        # Markdown (nvf default: deno_fmt)
+        deno_fmt.command = lib.mkForce "deno";
+        # CSS / TS / JS (nvf default: prettier)
+        prettier.command = lib.mkForce "prettier";
+        # HTML (nvf default: superhtml)
+        superhtml = {
+          command = lib.mkForce "superhtml";
+          args = lib.mkForce ["fmt" "-"];
+        };
+        # JSON (nvf default: jsonfmt)
+        jsonfmt = {
+          command = lib.mkForce "jsonfmt";
+          args = lib.mkForce ["-w" "-"];
+        };
+        # Python (sanzenvim uses ruff)
+        ruff = {
+          command = lib.mkForce "ruff";
+          args = lib.mkForce ["format" "-"];
+        };
+        # R (nvf default: styler)
+        styler.command = lib.mkForce "styler";
+      };
+      # nvf's ts.nix has a nested setupOpts path for formatters
+      setupOpts.formatters.prettier.command = lib.mkForce "prettier";
     };
 
-    # Remove explicit formatter packages – they should come from the environment
-    extraPackages = lib.mkForce [];
+    # ── Diagnostics linter commands ─────────────────────────────────────
+    # Override every linter cmd that nvf sets to a Nix store path.
+    diagnostics.nvim-lint.linters = {
+      # Nix
+      statix.cmd = lib.mkForce "statix";
+      deadnix.cmd = lib.mkForce "deadnix";
+      # Lua
+      luacheck.cmd = lib.mkForce "luacheck";
+      # HTML
+      htmlhint.cmd = lib.mkForce "htmlhint";
+      # Markdown
+      markdownlint-cli2.cmd = lib.mkForce "markdownlint-cli2";
+      # TypeScript/JavaScript
+      eslint_d.cmd = lib.mkForce "eslint_d";
+      # Kotlin
+      ktlint.cmd = lib.mkForce "ktlint";
+    };
+
+    # ── DAP ──────────────────────────────────────────────────────────────
+    # Disable DAP for unwrapped builds – debugger adapters embed Nix store
+    # paths in generated Lua that cannot be overridden via module options.
+    languages = {
+      enableDAP = lib.mkForce false;
+    };
+
+    # ── QML LSP/formatter ────────────────────────────────────────────────
+    # nvf's QML module uses qtdeclarative for both qmlls and qmlformat.
+    # Override the server cmd; the formatter is only used when LSP is off,
+    # so the server override alone is sufficient.
+    lsp.servers.qmlls.cmd = lib.mkForce ["qmlls"];
+
+    # ── Remove explicit LSP/formatter/linter packages ─────────────────
+    # Keep blink-cmp dependencies (ripgrep) bundled in all builds.
+    extraPackages = lib.mkForce [pkgs.ripgrep];
   };
 }
