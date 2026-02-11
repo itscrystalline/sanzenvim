@@ -48,7 +48,7 @@ jobs:
 
     - name: Build
       run: |
-        nix bundle --bundler github:DavHau/nix-portable -o bundle .#${{ matrix.variant.pkg }} -L 2>&1
+        nix bundle --bundler .#simple -o bundle .#${{ matrix.variant.pkg }} -L 2>&1
 
     - name: Upload Nix build artifacts
       uses: actions/upload-artifact@v4
