@@ -10,6 +10,9 @@ on:
       - .github/**
       - README.md
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: "Build Bundle (${{ matrix.variant.label }}, ${{ matrix.platform.name }})"
