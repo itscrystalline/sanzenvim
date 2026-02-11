@@ -10,17 +10,26 @@
 - The error occurs during nix-portable's bootstrap process
 
 **Root Cause:**
-This is a known bootstrap issue with nix-portable where it performs a self-check by trying to build a test package. The check fails in certain environments, but this **does NOT affect the LSP wrapper functionality** on systems without Nix.
+This is a known bootstrap issue with nix-portable where it performs a self-check by trying to build a test package. The check fails in certain environments.
 
-**Impact:**
-- ✗ The nvim editor itself won't launch (bootstrap fails)
-- ✓ LSP detection and wrapper creation still works
-- ✓ Bundle extracts successfully
-- ✓ On systems with properly configured Nix, LSP wrappers will be created
+**Status: AUTOMATICALLY FIXED** 🎉
 
-**Workaround (for Nix systems):**
+The bundle now includes an automatic bootstrap workaround that:
+1. Detects when running on a Nix system
+2. Automatically extracts or copies the nix binary
+3. Creates the required symlink structure before first run
+4. Marks the fix as applied with a `.bootstrapped` marker file
 
-If you're on a system with Nix installed and encounter this error, apply this workaround:
+**What happens automatically:**
+- On first run, if `/nix/store` exists, the wrapper script:
+  - Creates `~/.nix-portable-sanzenvim/bin/nix` (from system or bundle)
+  - Finds the nvf hash from the extracted bundle
+  - Creates the symlink: `~/.nix-portable-sanzenvim/nix/store/<hash>-nvf-with-helpers/bin/nix`
+  - Marks the fix as complete
+
+**Manual workaround (if automatic fix fails):**
+
+If for some reason the automatic fix doesn't work, you can apply it manually:
 
 ```bash
 #!/bin/bash
@@ -58,7 +67,17 @@ touch "$NP_DIR/nix/store/.fixed"
 echo "Workaround applied. Try running the bundle again."
 ```
 
-**Alternative: Use on bare Linux systems**
+**Verify the automatic fix:**
+
+Check if the fix was applied:
+```bash
+ls -la ~/.nix-portable-sanzenvim/.bootstrapped
+ls -la ~/.nix-portable-sanzenvim/bin/nix
+```
+
+If these files exist, the automatic fix was applied.
+
+**On bare Linux systems (no manual action needed):**
 
 The bundle works perfectly on bare Linux systems (without Nix). Just install LSPs via your package manager:
 

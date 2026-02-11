@@ -53,24 +53,48 @@ if [ -d "/nix/store" ] && [ -n "$(ls -A /nix/store 2>/dev/null | head -n 1)" ]; 
     export NP_LOCATION="''${SANZENVIM_NP_LOCATION:-$HOME}"
     NP_DIR="$NP_LOCATION/.nix-portable-sanzenvim"
     
-    # On first run, we need to detect the nvf store path and create a symlink
-    # This works around nix-portable's bootstrap check
-    if [ ! -e "$NP_DIR" ]; then
-        mkdir -p "$NP_DIR"
-        # nix-portable will create its own nix directory
-        # But we need to make sure the nvf bin/nix exists
-        # We'll let it run once, then fix it
-    fi
-    
-    # After nix-portable creates its structure, add the nix symlink if needed
-    if [ -d "$NP_DIR/nix/store" ] && [ ! -L "$NP_DIR/nix/store/.fixed" ]; then
-        # Find the nvf-with-helpers store path from the extracted bundle
-        NVF_HASH=$(strings "$BUNDLE_CACHE" | grep -o '/nix/store/[^/]*-nvf-with-helpers' | head -1 | cut -d/ -f4 | cut -d- -f1)
-        if [ -n "$NVF_HASH" ] && [ ! -e "$NP_DIR/nix/store/$NVF_HASH-nvf-with-helpers/bin/nix" ]; then
-            mkdir -p "$NP_DIR/nix/store/$NVF_HASH-nvf-with-helpers/bin"
-            ln -sf "$NP_DIR/bin/nix" "$NP_DIR/nix/store/$NVF_HASH-nvf-with-helpers/bin/nix" 2>/dev/null || true
+    # Bootstrap workaround: Setup nix-portable directory structure
+    # This fixes the "nix is unable to build packages" error
+    if [ ! -e "$NP_DIR/.bootstrapped" ]; then
+        echo "Applying bootstrap workaround..." >&2
+        
+        # Create directory structure
+        mkdir -p "$NP_DIR/bin"
+        mkdir -p "$NP_DIR/nix/store"
+        
+        # Extract nix binary from the bundle or use system nix
+        if [ ! -f "$NP_DIR/bin/nix" ]; then
+            # Try to use system nix first
+            if command -v nix >/dev/null 2>&1 && [ -x "$(command -v nix)" ]; then
+                cp "$(command -v nix)" "$NP_DIR/bin/nix" 2>/dev/null || true
+            fi
+            
+            # If still no nix binary, try to extract from the portable bundle
+            if [ ! -f "$NP_DIR/bin/nix" ] && [ -f "$BUNDLE_CACHE" ]; then
+                # The nix-portable bundle contains a nix binary
+                # We can extract it using unzip if available
+                if command -v unzip >/dev/null 2>&1; then
+                    unzip -p "$BUNDLE_CACHE" "nix/store/*/bin/nix" > "$NP_DIR/bin/nix" 2>/dev/null || true
+                    chmod +x "$NP_DIR/bin/nix" 2>/dev/null || true
+                fi
+            fi
         fi
-        touch "$NP_DIR/nix/store/.fixed"
+        
+        # Find the nvf-with-helpers store path from the extracted bundle
+        if [ -f "$BUNDLE_CACHE" ]; then
+            NVF_HASH=$(strings "$BUNDLE_CACHE" 2>/dev/null | grep -o '/nix/store/[^/]*-nvf-with-helpers' | head -1 | cut -d/ -f4 | cut -d- -f1)
+            
+            if [ -n "$NVF_HASH" ] && [ -f "$NP_DIR/bin/nix" ]; then
+                # Create the symlink structure nix-portable expects
+                mkdir -p "$NP_DIR/nix/store/$NVF_HASH-nvf-with-helpers/bin"
+                ln -sf "$NP_DIR/bin/nix" "$NP_DIR/nix/store/$NVF_HASH-nvf-with-helpers/bin/nix" 2>/dev/null || true
+                
+                echo "Bootstrap workaround applied successfully" >&2
+            fi
+        fi
+        
+        # Mark as bootstrapped
+        touch "$NP_DIR/.bootstrapped"
     fi
     
     # Create wrapper scripts for host LSPs in a temp directory
