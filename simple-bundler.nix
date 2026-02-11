@@ -7,16 +7,18 @@
 # 2. If yes: Copies/links LSPs to portable's PATH before launching
 # 3. If no: Runs normally in portable mode
 
+{
+  pkgs,
+  nix-portable-bundler,
+}:
+
 program:
 let
-  nix-portable = builtins.getFlake "github:DavHau/nix-portable";
-  nixpkgs = import <nixpkgs> {};
-  
-  # Create base nix-portable bundle  
-  baseBundle = nix-portable.bundlers.${program.system}.default program;
+  # Create base nix-portable bundle using the provided bundler
+  baseBundle = nix-portable-bundler program;
   
 in
-nixpkgs.runCommand "universal-portable-${program.name}" {} ''
+pkgs.runCommand "universal-portable-${program.name}" {} ''
   mkdir -p $out/bin
   
   cat > $out/bin/nvim << 'WRAPPER_SCRIPT'

@@ -16,7 +16,7 @@ Pre-built universal bundles are available for download:
 ## Build from Source
 
 ```bash
-nix bundle --bundler .#simple -o bundle .#unwrapped --impure
+nix bundle --bundler .#simple -o bundle .#unwrapped
 ```
 
 This creates a portable `bundle/bin/nvim` that works on **all Linux systems**.
