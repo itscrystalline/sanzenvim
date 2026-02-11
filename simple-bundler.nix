@@ -53,56 +53,83 @@ if [ -d "/nix/store" ] && [ -n "$(ls -A /nix/store 2>/dev/null | head -n 1)" ]; 
     export NP_LOCATION="''${SANZENVIM_NP_LOCATION:-$HOME}"
     NP_DIR="$NP_LOCATION/.nix-portable-sanzenvim"
     
-    # Bootstrap workaround: Tell nix-portable to use system nix if available
-    # This fixes the "nix is unable to build packages" error
+    # Bootstrap workaround: Override how nix-portable runs nix
+    # This fixes the "nix is unable to build packages" error by using NP_RUN
     if [ ! -e "$NP_DIR/.bootstrapped" ]; then
         echo "Applying bootstrap workaround..." >&2
         
         # Create directory structure
         mkdir -p "$NP_DIR"
         
-        # Try to use system nix directly via NP_NIX environment variable
+        # Check if system has nix installed
         if command -v nix >/dev/null 2>&1 && [ -x "$(command -v nix)" ]; then
-            # System has nix installed - use it directly
-            export NP_NIX="$(command -v nix)"
+            # System has nix installed - use it directly with NP_RUN
+            SYSTEM_NIX="$(command -v nix)"
             export NP_RUNTIME="nix"
-            echo "Using system nix at: $NP_NIX" >&2
+            # NP_RUN completely overrides how nix is executed
+            # Format: $NP_RUN {nix-binary} {args...}
+            # We use 'exec' to replace the nix binary call entirely
+            export NP_RUN="exec $SYSTEM_NIX"
+            echo "Using system nix at: $SYSTEM_NIX (via NP_RUN)" >&2
+            echo "$SYSTEM_NIX" > "$NP_DIR/.np_nix"
         else
-            # No system nix - try to extract from bundle and use proot runtime
+            # No system nix - create a wrapper that extracts and runs embedded nix
             mkdir -p "$NP_DIR/bin"
             
-            if [ -f "$BUNDLE_CACHE" ] && command -v unzip >/dev/null 2>&1; then
-                # Extract nix binary from the portable bundle
-                unzip -p "$BUNDLE_CACHE" "nix/store/*/bin/nix" > "$NP_DIR/bin/nix" 2>/dev/null || true
-                chmod +x "$NP_DIR/bin/nix" 2>/dev/null || true
-                
-                if [ -f "$NP_DIR/bin/nix" ]; then
-                    export NP_NIX="$NP_DIR/bin/nix"
-                    export NP_RUNTIME="bwrap"
-                    echo "Using extracted nix at: $NP_NIX" >&2
-                fi
-            fi
+            # Create a wrapper script that nix-portable will call
+            cat > "$NP_DIR/bin/nix-wrapper" << 'NIX_WRAPPER_EOF'
+#!/bin/bash
+# Extract and execute the embedded nix binary
+WRAPPER_DIR="$(dirname "$(readlink -f "$0")")"
+NIX_BIN="$WRAPPER_DIR/nix"
+
+# Extract nix from bundle on first run
+if [ ! -x "$NIX_BIN" ]; then
+    BUNDLE_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/sanzenvim-portable/nvim-portable"
+    if [ -f "$BUNDLE_CACHE" ] && command -v unzip >/dev/null 2>&1; then
+        unzip -p "$BUNDLE_CACHE" "nix/store/*/bin/nix" 2>/dev/null > "$NIX_BIN" || true
+        chmod +x "$NIX_BIN" 2>/dev/null || true
+    fi
+fi
+
+# Execute nix if available, otherwise fail gracefully
+if [ -x "$NIX_BIN" ]; then
+    exec "$NIX_BIN" "$@"
+else
+    echo "Error: Could not extract nix binary from bundle" >&2
+    exit 1
+fi
+NIX_WRAPPER_EOF
+            chmod +x "$NP_DIR/bin/nix-wrapper"
+            
+            # Use NP_RUN to call our wrapper
+            export NP_RUNTIME="bwrap"
+            export NP_RUN="exec $NP_DIR/bin/nix-wrapper"
+            echo "Using extracted nix via wrapper (via NP_RUN)" >&2
+            echo "$NP_DIR/bin/nix-wrapper" > "$NP_DIR/.np_nix"
         fi
+        
+        # Save runtime for next time
+        echo "$NP_RUNTIME" > "$NP_DIR/.np_runtime"
         
         # Mark as bootstrapped
         touch "$NP_DIR/.bootstrapped"
         echo "Bootstrap workaround applied successfully" >&2
     else
-        # Already bootstrapped - restore environment variables
+        # Already bootstrapped - restore configuration
         if [ -f "$NP_DIR/.np_runtime" ]; then
             export NP_RUNTIME="$(cat "$NP_DIR/.np_runtime")"
         fi
         if [ -f "$NP_DIR/.np_nix" ]; then
-            export NP_NIX="$(cat "$NP_DIR/.np_nix")"
+            NIX_PATH="$(cat "$NP_DIR/.np_nix")"
+            if [ "$NP_RUNTIME" = "nix" ]; then
+                # Direct system nix
+                export NP_RUN="exec $NIX_PATH"
+            else
+                # Wrapper script
+                export NP_RUN="exec $NIX_PATH"
+            fi
         fi
-    fi
-    
-    # Save runtime configuration for next time
-    if [ -n "$NP_RUNTIME" ] && [ ! -f "$NP_DIR/.np_runtime" ]; then
-        echo "$NP_RUNTIME" > "$NP_DIR/.np_runtime"
-    fi
-    if [ -n "$NP_NIX" ] && [ ! -f "$NP_DIR/.np_nix" ]; then
-        echo "$NP_NIX" > "$NP_DIR/.np_nix"
     fi
     
     # Create wrapper scripts for host LSPs in a temp directory

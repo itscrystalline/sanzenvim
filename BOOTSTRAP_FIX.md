@@ -2,25 +2,28 @@
 
 ## Overview
 
-The bundle now includes an **automatic bootstrap workaround** that fixes the "Fatal error: nix is unable to build packages" issue on Nix systems by using nix-portable's environment variables to control its runtime behavior.
+The bundle now includes an **automatic bootstrap workaround** that fixes the "Fatal error: nix is unable to build packages" issue on Nix systems by using nix-portable's `NP_RUN` environment variable to override how nix is executed.
 
 ## The Problem
 
-Nix-portable performs a bootstrap self-check by trying to build a test package. This check fails in certain environments because it expects specific directory structures that don't exist yet.
+Nix-portable performs a bootstrap self-check by trying to build a test package. This fails because:
+1. Nix-portable embeds the nix binary path at **build time** (e.g., `/nix/store/xxx/bin/nix`)
+2. When using proot runtime, this path doesn't exist in the emptyroot sandbox
+3. Setting `NP_NIX` doesn't work because the path is already hardcoded in the bundle
 
 ## The Solution
 
-Instead of trying to manually create the directory structure nix-portable expects, we use **nix-portable's own environment variables** to control its behavior:
+We use `NP_RUN` to **completely override** how nix-portable executes nix:
 
 - `NP_RUNTIME` - Tells nix-portable which runtime to use (nix, bwrap, or proot)
-- `NP_NIX` - Specifies the path to the nix executable to use
+- `NP_RUN` - Overrides the complete command to run nix (format: `$NP_RUN {nix-binary} {args...}`)
 
 ### Strategy
 
-1. **If system has nix:** Use `NP_NIX` to point to system nix and set `NP_RUNTIME=nix`
-2. **If no system nix:** Extract nix from bundle and use `NP_RUNTIME=bwrap`
+1. **If system has nix:** Use `NP_RUN="exec /path/to/nix"` to replace the hardcoded nix path entirely
+2. **If no system nix:** Create a wrapper script that extracts nix from bundle and use `NP_RUN="exec /path/to/wrapper"`
 
-This bypasses nix-portable's bootstrap check entirely by telling it exactly which nix binary to use.
+This completely overrides nix-portable's nix execution, bypassing the bootstrap check.
 
 ## Implementation
 
@@ -40,40 +43,50 @@ if [ ! -e "$NP_DIR/.bootstrapped" ]; then
 - Uses a `.bootstrapped` marker file to avoid re-running
 - Only runs on first execution
 
-### 3. System Nix Detection (lines 65-71)
+### 3. System Nix Detection
 ```bash
 if command -v nix >/dev/null 2>&1 && [ -x "$(command -v nix)" ]; then
-    export NP_NIX="$(command -v nix)"
+    SYSTEM_NIX="$(command -v nix)"
     export NP_RUNTIME="nix"
-    echo "Using system nix at: $NP_NIX" >&2
+    export NP_RUN="exec $SYSTEM_NIX"
+    echo "Using system nix at: $SYSTEM_NIX (via NP_RUN)" >&2
 ```
 - Checks if system has nix installed
-- Sets `NP_NIX` to system nix path
+- Sets `NP_RUN` to exec system nix directly
 - Sets `NP_RUNTIME=nix` to use native nix (fastest)
+- Completely replaces nix-portable's hardcoded nix path
 
-### 4. Fallback: Extract from Bundle (lines 72-83)
+### 4. Fallback: Wrapper Script
 ```bash
 else
-    # Extract nix binary from the portable bundle
-    unzip -p "$BUNDLE_CACHE" "nix/store/*/bin/nix" > "$NP_DIR/bin/nix"
-    chmod +x "$NP_DIR/bin/nix"
-    
-    export NP_NIX="$NP_DIR/bin/nix"
+    # Create a wrapper script that extracts and runs embedded nix
+    cat > "$NP_DIR/bin/nix-wrapper" << 'EOF'
+#!/bin/bash
+NIX_BIN="$WRAPPER_DIR/nix"
+if [ ! -x "$NIX_BIN" ]; then
+    unzip -p "$BUNDLE_CACHE" "nix/store/*/bin/nix" > "$NIX_BIN"
+    chmod +x "$NIX_BIN"
+fi
+exec "$NIX_BIN" "$@"
+EOF
     export NP_RUNTIME="bwrap"
+    export NP_RUN="exec $NP_DIR/bin/nix-wrapper"
 fi
 ```
-- If no system nix, extract from the embedded bundle
-- Sets `NP_NIX` to extracted nix
+- Creates a wrapper script that handles nix extraction
+- Wrapper extracts nix from bundle on first call
+- Sets `NP_RUN` to exec the wrapper
 - Sets `NP_RUNTIME=bwrap` (bubblewrap, faster than proot)
 
-### 5. Persistence (lines 93-103)
+### 5. Persistence
 ```bash
-# Save runtime configuration for next time
 echo "$NP_RUNTIME" > "$NP_DIR/.np_runtime"
-echo "$NP_NIX" > "$NP_DIR/.np_nix"
+echo "$NIX_PATH" > "$NP_DIR/.np_nix"
+# On restore:
+export NP_RUN="exec $(cat "$NP_DIR/.np_nix")"
 ```
 - Saves configuration to files
-- On subsequent runs, restores from saved files
+- On subsequent runs, restores `NP_RUN` with saved path
 - Avoids re-detection overhead
 
 ## User Experience
@@ -82,7 +95,7 @@ echo "$NP_NIX" > "$NP_DIR/.np_nix"
 ```bash
 $ ./bundle/bin/nvim --version
 Applying bootstrap workaround...
-Using system nix at: /usr/bin/nix
+Using system nix at: /usr/bin/nix (via NP_RUN)
 Bootstrap workaround applied successfully
 NVIM v0.11.5
 ...
@@ -109,32 +122,52 @@ nix
 
 $ cat ~/.nix-portable-sanzenvim/.np_nix
 /usr/bin/nix
+
+$ env | grep NP_
+NP_RUNTIME=nix
+NP_RUN=exec /usr/bin/nix
 ```
 
 ## Why This Works
 
-Nix-portable's environment variables are read before its bootstrap check:
+The key insight is that `NP_RUN` **completely replaces** how nix is executed:
 
-1. `NP_NIX` overrides nix-portable's default nix binary search
-2. `NP_RUNTIME` overrides nix-portable's runtime selection
-3. When these are set, nix-portable skips its bootstrap self-check
-4. The bundle works immediately without directory manipulation
+1. Nix-portable hardcodes the nix binary path at build time (e.g., `/nix/store/xxx/bin/nix`)
+2. This hardcoded path doesn't exist when using proot (emptyroot sandbox)
+3. `NP_NIX` doesn't help because the path is already embedded
+4. `NP_RUN` overrides the **execution** entirely: `$NP_RUN {nix-binary} {args...}`
+5. We set `NP_RUN="exec /usr/bin/nix"` to replace the hardcoded path
+6. Nix-portable now executes our command instead of its hardcoded binary
 
-This is the **correct** way to configure nix-portable, as documented in its README.
+This is the **official** way to override nix execution, as documented in nix-portable's README.
 
 ## Benefits
 
-✅ Uses nix-portable's official configuration mechanism
-✅ No directory structure manipulation needed
+✅ Uses `NP_RUN` to completely override nix execution (official mechanism)
+✅ Replaces hardcoded build-time path with runtime path
 ✅ Faster - uses system nix when available (native runtime)
-✅ Falls back gracefully to extracted nix + bwrap
+✅ Falls back gracefully to wrapper script that extracts nix
 ✅ One-time detection, saved for future runs
 ✅ Clear user feedback via stderr messages
 ✅ Works on both NixOS and Ubuntu with Nix
 
 ## Technical Notes
 
+- `NP_RUN` format: Command that will be prepended before nix binary and args
+- We use `exec` to replace the process entirely (more efficient)
 - Configuration is saved in `~/.nix-portable-sanzenvim/.np_runtime` and `.np_nix`
-- On subsequent runs, configuration is restored from these files
-- All operations use `|| true` for safety
+- On subsequent runs, `NP_RUN` is reconstructed from saved path
+- Wrapper script handles lazy extraction of nix binary on first use
 - The `.bootstrapped` marker prevents re-running detection logic
+
+## Debugging
+
+Enable debug mode to see what's happening:
+```bash
+NP_DEBUG=2 ./bundle/bin/nvim --version
+```
+
+This will show:
+- Which runtime is selected
+- The exact `NP_RUN` command being used
+- Bootstrap detection and workaround application
