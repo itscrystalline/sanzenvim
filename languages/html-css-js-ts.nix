@@ -1,20 +1,10 @@
 {
   pkgs,
   lib,
-  config,
+  full,
   ...
 }: let
-  enabled = config.vim.lsp.enable;
-
   filetypes = ["typescript" "javascript" "javascriptreact" "typescriptreact" "vue"];
-  vue-language-server = lib.getExe pkgs.vue-language-server;
-  vtsls = lib.getExe pkgs.vtsls;
-  vue-plugin = {
-    name = "@vue/typescript-plugin";
-    location = "${pkgs.vue-language-server}/lib/language-tools/packages/language-server";
-    languages = ["vue"];
-    configNamespace = "typescript";
-  };
 in {
   vim = {
     languages = {
@@ -30,7 +20,16 @@ in {
       vue
       tsx
     ];
-    lsp.servers = lib.mkIf enabled {
+    lsp.servers = lib.mkIf full (let
+      vue-language-server = lib.getExe pkgs.vue-language-server;
+      vtsls = lib.getExe pkgs.vtsls;
+      vue-plugin = {
+        name = "@vue/typescript-plugin";
+        location = "${pkgs.vue-language-server}/lib/language-tools/packages/language-server";
+        languages = ["vue"];
+        configNamespace = "typescript";
+      };
+    in {
       vtsls = {
         inherit filetypes;
         cmd = ["${vtsls}" "--stdio"];
@@ -90,6 +89,6 @@ in {
           end
         '';
       };
-    };
+    });
   };
 }

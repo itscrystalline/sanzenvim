@@ -32,8 +32,8 @@
     languages = {
       enableTreesitter = true;
       enableDAP = full;
-      enableExtraDiagnostics = true;
-      enableFormat = true;
+      enableExtraDiagnostics = full;
+      enableFormat = full;
     };
     lsp = lib.mkIf full {
       enable = true;
