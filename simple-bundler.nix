@@ -46,44 +46,46 @@ if [ ! -x "$BUNDLE_CACHE" ]; then
     chmod +x "$BUNDLE_CACHE"
 fi
 
-# Detect if host has Nix installed
 # Bootstrap workaround: Create nix symlink where nix-portable expects it
-# This fixes the "nix is unable to build packages" error on systems with /nix/store
+# This fixes the "nix is unable to build packages" error
+# nix-portable derives nix path from nvim path: $(dirname nvim)/nix
+# But our bundle has them in separate store paths, so we create a symlink
+export NP_LOCATION="''${SANZENVIM_NP_LOCATION:-$HOME}"
+NP_BOOTSTRAP_MARKER="$NP_LOCATION/.nix-portable-sanzenvim-bootstrapped"
+
+if [ ! -e "$NP_BOOTSTRAP_MARKER" ]; then
+    # Run the bundle once to extract the store (redirect output to avoid noise)
+    "$BUNDLE_CACHE" --version >/dev/null 2>&1 || true
+    
+    # Find the actual nix binary in the extracted store
+    NP_STORE="$NP_LOCATION/.nix-portable/nix/store"
+    if [ -d "$NP_STORE" ]; then
+        # Find the nix binary
+        NIX_BINARY=$(find "$NP_STORE" -name "nix" -type f -executable 2>/dev/null | head -n 1)
+        
+        if [ -n "$NIX_BINARY" ]; then
+            # Find the nvim-with-helpers directory
+            NVIM_DIR=$(find "$NP_STORE" -name "*nvf-with-helpers" -type d 2>/dev/null | head -n 1)
+            
+            if [ -n "$NVIM_DIR" ] && [ ! -e "$NVIM_DIR/bin/nix" ]; then
+                # Create symlink
+                ln -sf "$NIX_BINARY" "$NVIM_DIR/bin/nix" 2>/dev/null || true
+            fi
+        fi
+    fi
+    
+    # Mark as bootstrapped
+    mkdir -p "$(dirname "$NP_BOOTSTRAP_MARKER")" 2>/dev/null || true
+    touch "$NP_BOOTSTRAP_MARKER" 2>/dev/null || true
+fi
+
+# Detect if host has Nix installed (for LSP wrapping feature)
 if [ -d "/nix/store" ] && [ -n "$(ls -A /nix/store 2>/dev/null | head -n 1)" ]; then
-    # Host has /nix/store - apply bootstrap workaround
+    # Host has /nix/store - set up LSP wrapping
     # Use a separate NP_LOCATION to avoid conflicts  
     export NP_LOCATION="''${SANZENVIM_NP_LOCATION:-$HOME}"
     NP_DIR="$NP_LOCATION/.nix-portable-sanzenvim"
     mkdir -p "$NP_DIR"
-    
-    # Bootstrap workaround: nix-portable expects the nix binary in the same directory as nvim
-    # But our bundle has them in separate store paths. Create a symlink on first run.
-    if [ ! -e "$NP_DIR/.bootstrapped" ]; then
-        echo "Applying bootstrap workaround..." >&2
-        
-        # Run the bundle once to extract the store (redirect output to avoid noise)
-        "$BUNDLE_CACHE" --version >/dev/null 2>&1 || true
-        
-        # Find the actual nix binary in the extracted store
-        NP_STORE="$NP_LOCATION/.nix-portable/nix/store"
-        if [ -d "$NP_STORE" ]; then
-            # Find the nix binary
-            NIX_BINARY=$(find "$NP_STORE" -name "nix" -type f -executable 2>/dev/null | head -n 1)
-            
-            if [ -n "$NIX_BINARY" ]; then
-                # Find the nvim-with-helpers directory
-                NVIM_DIR=$(find "$NP_STORE" -name "*nvf-with-helpers" -type d 2>/dev/null | head -n 1)
-                
-                if [ -n "$NVIM_DIR" ] && [ ! -e "$NVIM_DIR/bin/nix" ]; then
-                    # Create symlink
-                    ln -sf "$NIX_BINARY" "$NVIM_DIR/bin/nix" 2>/dev/null || true
-                    echo "Bootstrap workaround applied: created nix symlink" >&2
-                fi
-            fi
-        fi
-        
-        touch "$NP_DIR/.bootstrapped"
-    fi
     
     # Create wrapper scripts for host LSPs in a temp directory
     # This works around the proot sandbox limitation
