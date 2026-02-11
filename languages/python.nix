@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  full,
   ...
 }: {
   vim.languages.python = {
@@ -9,7 +8,7 @@
     lsp.enable = false;
     format.type = ["ruff"];
   };
-  vim.lsp.servers.ty = lib.mkIf full {
+  vim.lsp.servers.ty = {
     cmd = lib.mkDefault [(lib.getExe pkgs.ty) "server"];
     filetypes = ["python"];
     root_markers = [
