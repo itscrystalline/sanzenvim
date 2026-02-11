@@ -53,5 +53,7 @@
       packages.mini = nvim false [];
       packages.unwrapped = nvim true [./unwrapped.nix];
       packages.mini-unwrapped = nvim false [./unwrapped.nix];
+      
+      bundlers.simple = import ./simple-bundler.nix;
     });
 }
