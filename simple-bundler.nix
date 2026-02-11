@@ -53,48 +53,56 @@ if [ -d "/nix/store" ] && [ -n "$(ls -A /nix/store 2>/dev/null | head -n 1)" ]; 
     export NP_LOCATION="''${SANZENVIM_NP_LOCATION:-$HOME}"
     NP_DIR="$NP_LOCATION/.nix-portable-sanzenvim"
     
-    # Bootstrap workaround: Setup nix-portable directory structure
+    # Bootstrap workaround: Tell nix-portable to use system nix if available
     # This fixes the "nix is unable to build packages" error
     if [ ! -e "$NP_DIR/.bootstrapped" ]; then
         echo "Applying bootstrap workaround..." >&2
         
         # Create directory structure
-        mkdir -p "$NP_DIR/bin"
-        mkdir -p "$NP_DIR/nix/store"
+        mkdir -p "$NP_DIR"
         
-        # Extract nix binary from the bundle or use system nix
-        if [ ! -f "$NP_DIR/bin/nix" ]; then
-            # Try to use system nix first
-            if command -v nix >/dev/null 2>&1 && [ -x "$(command -v nix)" ]; then
-                cp "$(command -v nix)" "$NP_DIR/bin/nix" 2>/dev/null || true
-            fi
+        # Try to use system nix directly via NP_NIX environment variable
+        if command -v nix >/dev/null 2>&1 && [ -x "$(command -v nix)" ]; then
+            # System has nix installed - use it directly
+            export NP_NIX="$(command -v nix)"
+            export NP_RUNTIME="nix"
+            echo "Using system nix at: $NP_NIX" >&2
+        else
+            # No system nix - try to extract from bundle and use proot runtime
+            mkdir -p "$NP_DIR/bin"
             
-            # If still no nix binary, try to extract from the portable bundle
-            if [ ! -f "$NP_DIR/bin/nix" ] && [ -f "$BUNDLE_CACHE" ]; then
-                # The nix-portable bundle contains a nix binary
-                # We can extract it using unzip if available
-                if command -v unzip >/dev/null 2>&1; then
-                    unzip -p "$BUNDLE_CACHE" "nix/store/*/bin/nix" > "$NP_DIR/bin/nix" 2>/dev/null || true
-                    chmod +x "$NP_DIR/bin/nix" 2>/dev/null || true
-                fi
-            fi
-        fi
-        
-        # Find the nvf-with-helpers store path from the extracted bundle
-        if [ -f "$BUNDLE_CACHE" ]; then
-            NVF_HASH=$(strings "$BUNDLE_CACHE" 2>/dev/null | grep -o '/nix/store/[^/]*-nvf-with-helpers' | head -1 | cut -d/ -f4 | cut -d- -f1)
-            
-            if [ -n "$NVF_HASH" ] && [ -f "$NP_DIR/bin/nix" ]; then
-                # Create the symlink structure nix-portable expects
-                mkdir -p "$NP_DIR/nix/store/$NVF_HASH-nvf-with-helpers/bin"
-                ln -sf "$NP_DIR/bin/nix" "$NP_DIR/nix/store/$NVF_HASH-nvf-with-helpers/bin/nix" 2>/dev/null || true
+            if [ -f "$BUNDLE_CACHE" ] && command -v unzip >/dev/null 2>&1; then
+                # Extract nix binary from the portable bundle
+                unzip -p "$BUNDLE_CACHE" "nix/store/*/bin/nix" > "$NP_DIR/bin/nix" 2>/dev/null || true
+                chmod +x "$NP_DIR/bin/nix" 2>/dev/null || true
                 
-                echo "Bootstrap workaround applied successfully" >&2
+                if [ -f "$NP_DIR/bin/nix" ]; then
+                    export NP_NIX="$NP_DIR/bin/nix"
+                    export NP_RUNTIME="bwrap"
+                    echo "Using extracted nix at: $NP_NIX" >&2
+                fi
             fi
         fi
         
         # Mark as bootstrapped
         touch "$NP_DIR/.bootstrapped"
+        echo "Bootstrap workaround applied successfully" >&2
+    else
+        # Already bootstrapped - restore environment variables
+        if [ -f "$NP_DIR/.np_runtime" ]; then
+            export NP_RUNTIME="$(cat "$NP_DIR/.np_runtime")"
+        fi
+        if [ -f "$NP_DIR/.np_nix" ]; then
+            export NP_NIX="$(cat "$NP_DIR/.np_nix")"
+        fi
+    fi
+    
+    # Save runtime configuration for next time
+    if [ -n "$NP_RUNTIME" ] && [ ! -f "$NP_DIR/.np_runtime" ]; then
+        echo "$NP_RUNTIME" > "$NP_DIR/.np_runtime"
+    fi
+    if [ -n "$NP_NIX" ] && [ ! -f "$NP_DIR/.np_nix" ]; then
+        echo "$NP_NIX" > "$NP_DIR/.np_nix"
     fi
     
     # Create wrapper scripts for host LSPs in a temp directory
