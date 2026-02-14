@@ -1,3 +1,3 @@
-{full, ...}: {
-  vim.utility.direnv.enable = full;
+_: {
+  vim.utility.direnv.enable = true;
 }
