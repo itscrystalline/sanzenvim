@@ -8,8 +8,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    my-nur.url = "github:itscrystalline/nur-packages";
-    nix-portable.url = "github:DavHau/nix-portable";
+    my-nur = {
+      url = "github:itscrystalline/nur-packages";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-portable = {
+      url = "github:DavHau/nix-portable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     nixpkgs,
