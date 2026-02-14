@@ -1,3 +1,6 @@
-_: {
-  vim.utility.direnv.enable = true;
+{pkgs, ...}: {
+  vim = {
+    utility.direnv.enable = true;
+    extraPackages = [pkgs.direnv];
+  };
 }

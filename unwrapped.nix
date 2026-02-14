@@ -62,15 +62,22 @@
       # Verilog – custom veridian server (sanzenvim)
       veridian.cmd = lib.mkForce ["veridian"];
     };
+    languages = {
+      # ── Rust LSP ────────────────────────────────────────────────────────
+      # rustaceanvim accepts a list of strings to discover from PATH.
+      rust.lsp.package = lib.mkForce ["rust-analyzer"];
 
-    # ── Rust LSP ────────────────────────────────────────────────────────
-    # rustaceanvim accepts a list of strings to discover from PATH.
-    languages.rust.lsp.package = lib.mkForce ["rust-analyzer"];
+      # ── Typst preview dependencies ──────────────────────────────────────
+      typst.extensions.typst-preview-nvim.setupOpts.dependencies_bin = lib.mkForce {
+        tinymist = "tinymist";
+        websocat = "websocat";
+      };
 
-    # ── Typst preview dependencies ──────────────────────────────────────
-    languages.typst.extensions.typst-preview-nvim.setupOpts.dependencies_bin = lib.mkForce {
-      tinymist = "tinymist";
-      websocat = "websocat";
+      # ── DAP ──────────────────────────────────────────────────────────────
+      # Disable DAP for unwrapped builds – debugger adapters embed Nix store
+      # paths in generated Lua that cannot be overridden via module options.
+
+      enableDAP = lib.mkForce false;
     };
 
     # ── Formatter commands ──────────────────────────────────────────────
@@ -129,13 +136,6 @@
       ktlint.cmd = lib.mkForce "ktlint";
     };
 
-    # ── DAP ──────────────────────────────────────────────────────────────
-    # Disable DAP for unwrapped builds – debugger adapters embed Nix store
-    # paths in generated Lua that cannot be overridden via module options.
-    languages = {
-      enableDAP = lib.mkForce false;
-    };
-
     # ── QML LSP/formatter ────────────────────────────────────────────────
     # nvf's QML module uses qtdeclarative for both qmlls and qmlformat.
     # Override the server cmd; the formatter is only used when LSP is off,
@@ -144,6 +144,6 @@
 
     # ── Remove explicit LSP/formatter/linter packages ─────────────────
     # Keep blink-cmp dependencies (ripgrep) bundled in all builds.
-    extraPackages = lib.mkForce [pkgs.ripgrep];
+    extraPackages = lib.mkForce [pkgs.ripgrep pkgs.direnv];
   };
 }
