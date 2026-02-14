@@ -28,7 +28,7 @@ jobs:
         variant:
           - pkg: unwrapped
             label: full
-          - pkg: mini-unwrapped
+          - pkg: mini
             label: mini
 
     steps:

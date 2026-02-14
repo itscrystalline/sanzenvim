@@ -10,8 +10,6 @@
     flake-utils.url = "github:numtide/flake-utils";
     my-nur.url = "github:itscrystalline/nur-packages";
     nix-portable.url = "github:DavHau/nix-portable";
-
-    # clangd-fix.url = "github:nixos/nixpkgs?ref=pull/462747/head";
   };
   outputs = {
     nixpkgs,
@@ -54,11 +52,12 @@
       packages.default = nvim true [];
       packages.mini = nvim false [];
       packages.unwrapped = nvim true [./unwrapped.nix];
-      packages.mini-unwrapped = nvim false [./unwrapped.nix];
-      
-      bundlers.simple = drv: (import ./simple-bundler.nix) {
-        inherit pkgs;
-        nix-portable-bundler = nix-portable.bundlers.${system}.default;
-      } drv;
+
+      bundlers.simple = drv:
+        (import ./simple-bundler.nix) {
+          inherit pkgs;
+          nix-portable-bundler = nix-portable.bundlers.${system}.default;
+        }
+        drv;
     });
 }
