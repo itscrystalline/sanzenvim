@@ -29,12 +29,12 @@
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [
-          (_: prev: rec {
-            hostsys = prev.stdenv.hostPlatform.system;
-            inherit (nixpkgs-stable.legacyPackages.${hostsys}) clang-tools;
-          })
-        ];
+        # overlays = [
+        #   (_: prev: rec {
+        #     hostsys = prev.stdenv.hostPlatform.system;
+        #     inherit (nixpkgs-stable.legacyPackages.${hostsys}) clang-tools;
+        #   })
+        # ];
       };
 
       nvim = full: extraModules:
