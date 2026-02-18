@@ -244,27 +244,9 @@
       desc = "Copy to system clipboard";
     }
     {
-      mode = "v";
-      key = "<leader>Y";
-      action = "\"+Ygv<Esc>";
-      desc = "Copy to system clipboard";
-    }
-    {
-      mode = "n";
-      key = "<leader>Y";
-      action = "\"+Y";
-      desc = "Copy to system clipboard";
-    }
-    {
       mode = ["n" "v"];
       key = "<leader>p";
       action = "\"+p";
-      desc = "Paste from system clipboard";
-    }
-    {
-      mode = ["n" "v"];
-      key = "<leader>P";
-      action = "\"+P";
       desc = "Paste from system clipboard";
     }
 

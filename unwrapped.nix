@@ -4,6 +4,7 @@
 {
   lib,
   pkgs,
+  full,
   ...
 }: {
   vim = {
@@ -144,6 +145,11 @@
 
     # ── Remove explicit LSP/formatter/linter packages ─────────────────
     # Keep blink-cmp dependencies (ripgrep) bundled in all builds.
-    extraPackages = lib.mkForce [pkgs.ripgrep pkgs.direnv];
+    extraPackages = lib.mkForce ([pkgs.ripgrep pkgs.direnv]
+      ++ (
+        if full
+        then [pkgs.imagemagick]
+        else []
+      ));
   };
 }

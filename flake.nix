@@ -2,7 +2,6 @@
   description = "sanzenvim (燦然vim)";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     nvf = {
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,14 +15,23 @@
       url = "github:DavHau/nix-portable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    codeshot-nvim = {
+      url = "github:SergioRibera/codeshot.nvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    sss = {
+      url = "github:SergioRibera/sss";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     nixpkgs,
     flake-utils,
     nvf,
     my-nur,
-    nixpkgs-stable,
     nix-portable,
+    codeshot-nvim,
+    sss,
     ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
@@ -40,7 +48,7 @@
       nvim = full: extraModules:
         (nvf.lib.neovimConfiguration {
           inherit pkgs;
-          extraSpecialArgs = {inherit nvf my-nur full;};
+          extraSpecialArgs = {inherit nvf my-nur full codeshot-nvim sss;};
           modules =
             [
               ./options.nix
