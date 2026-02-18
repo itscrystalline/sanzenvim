@@ -49,5 +49,50 @@ in {
         pattern = ["*.rs"];
       }
     ];
+    keymaps = [
+      {
+        mode = "n";
+        key = "<leader>dk";
+        action = ''function() require("duck").cook() end'';
+        silent = true;
+        lua = true;
+      }
+      {
+        mode = "n";
+        key = "<leader>da";
+        action = ''function() require("duck").cook_all() end'';
+        silent = true;
+        lua = true;
+      }
+      {
+        mode = "n";
+        key = "<leader>dd";
+        action = ''
+          function()
+            local duck = require("duck")
+            local animals = {
+              { "🦍",  6 },
+              { "🐕",  7 },
+              { "🐈",  6 },
+              { "🐇",  9 },
+              { "🐓",  4 },
+              { "🐤",  3 },
+              { "🐧",  2 },
+              { "🦅", 12 },
+              { "🦆",  5 },
+              { "🦢",  4 },
+              { "🐢",  0 },
+              { "🐟",  7 },
+              { "🦀",  1 },
+              { "🐝", 15 }
+            }
+            local result = animals[math.random(1, #animals)]
+            duck.hatch(result[1], result[2])
+          end
+        '';
+        silent = true;
+        lua = true;
+      }
+    ];
   };
 }

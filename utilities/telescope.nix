@@ -49,4 +49,14 @@
       };
     };
   };
+  vim.keymaps = [
+    {
+      mode = "n";
+      key = "<leader>z";
+      action = "function() require('telescope').extensions.zoxide.list() end";
+      lua = true;
+      desc = "Open Zoxide";
+      silent = true;
+    }
+  ];
 }

@@ -29,4 +29,20 @@
       winbar.enabled = false;
     };
   };
+  vim.keymaps = [
+    {
+      mode = "n";
+      key = "<leader>nv";
+      action = ":ToggleTerm direction=vertical<CR>";
+      desc = "Open Vertical Terminal";
+      silent = true;
+    }
+    {
+      mode = "n";
+      key = "<leader>nf";
+      action = ":ToggleTerm direction=float<CR>";
+      desc = "Open Vertical Terminal";
+      silent = true;
+    }
+  ];
 }

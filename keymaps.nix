@@ -73,6 +73,20 @@
       silent = true;
       desc = "Split window right";
     }
+    {
+      mode = "n";
+      key = "<leader>w=";
+      action = "<C-W>w+";
+      silent = true;
+      desc = "Increase window size";
+    }
+    {
+      mode = "n";
+      key = "<leader>w_";
+      action = "<C-W>w-";
+      silent = true;
+      desc = "Decrease window size";
+    }
 
     # Toggle
     {
@@ -139,39 +153,6 @@
       action = "mzJ`z";
       silent = true;
       desc = "Allow cursor to stay in the same place after appeding to current line";
-    }
-
-    {
-      mode = "n";
-      key = "<C-d>";
-      action = ''function() require("cinnamon").scroll("<C-d>zz") end'';
-      lua = true;
-      silent = true;
-      desc = "Allow <C-d> and <C-u> to keep the cursor in the middle";
-    }
-    {
-      mode = "n";
-      key = "<S-Down>";
-      action = ''function() require("cinnamon").scroll("<S-Down>zz") end'';
-      lua = true;
-      silent = true;
-      desc = "Allow <S-Up> and <S-Down> to keep the cursor in the middle";
-    }
-    {
-      mode = "n";
-      key = "<C-u>";
-      action = ''function() require("cinnamon").scroll("<C-u>zz") end'';
-      lua = true;
-      silent = true;
-      desc = "Allow C-d and C-u to keep the cursor in the middle";
-    }
-    {
-      mode = "n";
-      key = "<S-Up>";
-      action = ''function() require("cinnamon").scroll("<S-Up>zz") end'';
-      lua = true;
-      silent = true;
-      desc = "Allow <S-Up> and <S-Down> to keep the cursor in the middle";
     }
 
     {
@@ -295,171 +276,11 @@
     }
 
     {
-      mode = "n";
-      key = "<leader>o";
-      action = ":Oil --float<CR>";
-      desc = "Open Oil on parent dir";
-      silent = true;
-    }
-
-    {
       mode = "t";
       key = "<C-x>";
       action = "<C-\\><C-n>";
       desc = "Escape out of Terminal mode";
       silent = true;
-    }
-
-    {
-      mode = "n";
-      key = "<leader>nv";
-      action = ":ToggleTerm direction=vertical<CR>";
-      desc = "Open Vertical Terminal";
-      silent = true;
-    }
-    {
-      mode = "n";
-      key = "<leader>nf";
-      action = ":ToggleTerm direction=float<CR>";
-      desc = "Open Vertical Terminal";
-      silent = true;
-    }
-
-    {
-      mode = "n";
-      key = "<leader>z";
-      action = "function() require('telescope').extensions.zoxide.list() end";
-      lua = true;
-      desc = "Open Zoxide";
-      silent = true;
-    }
-
-    # LSP
-    {
-      mode = "n";
-      key = "cn";
-      action = ":Navbuddy<CR>";
-      desc = "Open Navbuddy";
-      silent = true;
-    }
-    {
-      mode = "n";
-      key = "cr";
-      action = ":Lspsaga rename<CR>";
-      desc = "Open Navbuddy";
-      silent = true;
-    }
-    {
-      mode = "n";
-      key = "ca";
-      action = ":lua vim.lsp.buf.code_action()<CR>";
-      desc = "Code actions";
-      silent = true;
-    }
-    {
-      mode = "n";
-      key = "cf";
-      action = ":lua vim.lsp.buf.format()<CR>";
-      desc = "Format code";
-      silent = true;
-    }
-    {
-      mode = "n";
-      key = "gD";
-      action = ":lua vim.lsp.buf.definition()<CR>";
-      desc = "Goto definition";
-      silent = true;
-    }
-    {
-      mode = "n";
-      key = "K";
-      action = ":Lspsaga hover_doc<CR>";
-      desc = "Open Docs";
-      silent = true;
-    }
-    {
-      mode = "n";
-      key = "]d";
-      action = ":Lspsaga diagnostic_jump_next<CR>";
-      silent = true;
-      desc = "Next Diagnostic";
-    }
-    {
-      mode = "n";
-      key = "[d";
-      action = ":Lspsaga diagnostic_jump_prev<CR>";
-      silent = true;
-      desc = "Previous Diagnostic";
-    }
-    {
-      mode = "n";
-      key = "[c";
-      action = ''
-        function()
-          require("treesitter-context").go_to_context(vim.v.count1)
-        end
-      '';
-      lua = true;
-      silent = true;
-      desc = "Previous scope";
-    }
-    {
-      mode = "n";
-      key = "<leader>ut";
-      action = ''
-        function()
-          local enabled = not vim.lsp.inlay_hint.is_enabled()
-          vim.lsp.inlay_hint.enable(enabled)
-          vim.notify("Inlay Hints " .. (enabled and "on" or "off"))
-        end
-      '';
-      silent = true;
-      lua = true;
-      desc = "Toggle inlay hints";
-    }
-
-    {
-      mode = "n";
-      key = "<leader>dk";
-      action = ''function() require("duck").cook() end'';
-      silent = true;
-      lua = true;
-    }
-    {
-      mode = "n";
-      key = "<leader>da";
-      action = ''function() require("duck").cook_all() end'';
-      silent = true;
-      lua = true;
-    }
-    {
-      mode = "n";
-      key = "<leader>dd";
-      action = ''
-        function()
-          local duck = require("duck")
-          local animals = {
-            { "🦍",  6 },
-            { "🐕",  7 },
-            { "🐈",  6 },
-            { "🐇",  9 },
-            { "🐓",  4 },
-            { "🐤",  3 },
-            { "🐧",  2 },
-            { "🦅", 12 },
-            { "🦆",  5 },
-            { "🦢",  4 },
-            { "🐢",  0 },
-            { "🐟",  7 },
-            { "🦀",  1 },
-            { "🐝", 15 }
-          }
-          local result = animals[math.random(1, #animals)]
-          duck.hatch(result[1], result[2])
-        end
-      '';
-      silent = true;
-      lua = true;
     }
   ];
 }
