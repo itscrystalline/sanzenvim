@@ -49,4 +49,27 @@ in {
         // icons;
     };
   };
+  vim.keymaps = [
+    {
+      mode = "n";
+      key = "<leader>bQQ";
+      action = ":BufferLineCloseOthers<CR>";
+      desc = "Close all other buffers";
+      silent = true;
+    }
+    {
+      mode = "n";
+      key = "<leader>bQR";
+      action = ":BufferLineCloseRight<CR>";
+      desc = "Close all buffers to the right";
+      silent = true;
+    }
+    {
+      mode = "n";
+      key = "<leader>bQL";
+      action = ":BufferLineCloseLeft<CR>";
+      desc = "Close all buffers to the left";
+      silent = true;
+    }
+  ];
 }
