@@ -7,12 +7,19 @@
     enable = true;
     extensions.markview-nvim = {
       enable = true;
-      setupOpts = lib.mkIf full {
-        preview.icon_provider = "mini";
+      setupOpts = {
+        preview.icon_provider = lib.optionalString full "mini";
+        typst = {
+          code_blocks = {
+            pad_amount = 0;
+            style = "simple";
+          };
+          raw_blocks = {
+            pad_amount = 0;
+            style = "simple";
+          };
+        };
       };
     };
   };
-
-  # vim.treesitter.grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
-  # ];
 }
