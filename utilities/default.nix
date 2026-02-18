@@ -7,7 +7,7 @@
     ./nvim-tree.nix
     ./firenvim.nix
     ./neocord.nix
-    ./codeshot.nix
+    ./silicon.nix
     ./images.nix
     ./terminal
   ];

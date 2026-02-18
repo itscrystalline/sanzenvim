@@ -15,14 +15,6 @@
       url = "github:DavHau/nix-portable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    codeshot-nvim = {
-      url = "github:SergioRibera/codeshot.nvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    sss = {
-      url = "github:SergioRibera/sss";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
   outputs = {
     nixpkgs,
@@ -30,8 +22,6 @@
     nvf,
     my-nur,
     nix-portable,
-    codeshot-nvim,
-    sss,
     ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
@@ -48,7 +38,7 @@
       nvim = full: extraModules:
         (nvf.lib.neovimConfiguration {
           inherit pkgs;
-          extraSpecialArgs = {inherit nvf my-nur full codeshot-nvim sss;};
+          extraSpecialArgs = {inherit nvf my-nur full;};
           modules =
             [
               ./options.nix
@@ -63,9 +53,11 @@
             ++ extraModules;
         }).neovim;
     in {
-      packages.default = nvim true [];
-      packages.mini = nvim false [];
-      packages.unwrapped = nvim true [./unwrapped.nix];
+      packages = {
+        default = nvim true [];
+        mini = nvim false [];
+        unwrapped = nvim true [./unwrapped.nix];
+      };
 
       bundlers.simple = drv:
         (import ./simple-bundler.nix) {
