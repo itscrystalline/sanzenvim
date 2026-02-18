@@ -148,7 +148,7 @@
     extraPackages = lib.mkForce ([pkgs.ripgrep pkgs.direnv]
       ++ (
         if full
-        then [pkgs.imagemagick]
+        then [pkgs.imagemagick pkgs.silicon]
         else []
       ));
   };
