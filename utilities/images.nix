@@ -2,8 +2,12 @@
   full,
   pkgs,
   lib,
+  config,
   ...
-}: {
+}: let
+  inherit (lib.nvim.dag) entryAnywhere;
+  inherit (lib.nvim.lua) toLuaObject;
+in {
   vim = {
     utility.images = {
       image-nvim = {
@@ -58,4 +62,11 @@
     ];
     extraPackages = lib.optionals full [pkgs.imagemagick];
   };
+  vim.pluginRC.image-nvim = lib.mkIf full (lib.mkForce (entryAnywhere ''
+    if not vim.g.started_by_firenvim then
+      require("image").setup(
+          ${toLuaObject config.vim.utility.images.image-nvim.setupOpts}
+      )
+    end
+  ''));
 }
