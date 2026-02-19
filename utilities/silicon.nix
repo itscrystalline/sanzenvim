@@ -7,10 +7,10 @@
   inherit (lib.nvim.lua) toLuaObject;
   setupOpts = {
     font = "JetBrainsMono NF=14;Noto Sans Mono CJK JP=14;Noto Sans Mono=14;Noto Color Emoji=14";
-    theme = "Github";
+    theme = "catppuccin-mocha_dark";
     background = "#1E1E2E";
-    pad_horiz = 16;
-    pad_vert = 16;
+    pad_horiz = 0;
+    pad_vert = 0;
     no_window_controls = true;
     to_clipboard = true;
     command = "silicon";
@@ -18,12 +18,20 @@
       function()
         local ft = vim.bo.filetype
       	if ft == "oil" or ft == "toggleterm" or ft == "alpha" then
-          return "txt"
+          return "bash"
         else
           return ft
         end
       end
     '';
+    line_offset = lib.mkLuaInline ''
+      function(args)
+        return args.line1
+      end
+    '';
+    shadow_blur_radius = 0;
+    shadow_offset_x = 0;
+    shadow_offset_y = 0;
   };
 in {
   vim = {
