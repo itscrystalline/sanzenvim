@@ -17,7 +17,13 @@ in {
           integrations.markdown.downloadRemoteImages = true;
         };
       };
-      img-clip.enable = full;
+      img-clip = {
+        enable = full;
+        setupOpts.default = {
+          dir_path = "assets";
+          copy_images = true;
+        };
+      };
     };
     keymaps = [
       {
@@ -62,11 +68,17 @@ in {
     ];
     extraPackages = lib.optionals full [pkgs.imagemagick];
   };
-  vim.pluginRC.image-nvim = lib.mkIf full (lib.mkForce (entryAnywhere ''
-    if not vim.g.started_by_firenvim then
-      require("image").setup(
-          ${toLuaObject config.vim.utility.images.image-nvim.setupOpts}
-      )
-    end
-  ''));
+  vim.pluginRC = lib.mkIf full {
+    # TODO: keep until v0.9 is out
+    image-nvim = lib.mkForce (entryAnywhere ''
+      if not vim.g.started_by_firenvim then
+        require("image").setup(
+            ${toLuaObject config.vim.utility.images.image-nvim.setupOpts}
+        )
+      end
+    '');
+    img-clip = entryAnywhere ''
+      require("img-clip").setup(${toLuaObject config.vim.utility.images.img-clip.setupOpts})
+    '';
+  };
 }
