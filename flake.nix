@@ -25,19 +25,27 @@
     ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = import nixpkgs {
-        inherit system;
-        # overlays = [
-        #   (_: prev: rec {
-        #     hostsys = prev.stdenv.hostPlatform.system;
-        #     inherit (nixpkgs-stable.legacyPackages.${hostsys}) clang-tools;
-        #   })
-        # ];
-      };
+      armCrossPkgs = (import nixpkgs {inherit system;}).pkgsCross.aarch64-multiplatform;
+      pkgs = withCross:
+        import nixpkgs {
+          inherit system;
+          overlays =
+            if withCross
+            then [
+              (_: _: {
+                inherit (armCrossPkgs) rustPlatform;
+              })
+            ]
+            else [];
+        };
 
-      nvim = full: extraModules:
+      nvim = {
+        full ? true,
+        extraModules ? [],
+        crossCompilex86_64ToArm ? false,
+      }:
         (nvf.lib.neovimConfiguration {
-          inherit pkgs;
+          pkgs = pkgs crossCompilex86_64ToArm;
           extraSpecialArgs = {inherit nvf my-nur full;};
           modules =
             [
@@ -54,9 +62,19 @@
         }).neovim;
     in {
       packages = {
-        default = nvim true [];
-        mini = nvim false [];
-        unwrapped = nvim true [./unwrapped.nix];
+        default = nvim {};
+        mini = nvim {full = false;};
+        unwrapped = nvim {extraModules = [./unwrapped.nix];};
+
+        defaultCross = nvim {crossCompilex86_64ToArm = true;};
+        miniCross = nvim {
+          full = false;
+          crossCompilex86_64ToArm = true;
+        };
+        unwrappedCross = nvim {
+          extraModules = [./unwrapped.nix];
+          crossCompilex86_64ToArm = true;
+        };
       };
 
       bundlers.simple = drv:
