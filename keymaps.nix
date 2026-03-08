@@ -264,5 +264,13 @@
       desc = "Escape out of Terminal mode";
       silent = true;
     }
+
+    {
+      mode = "n";
+      key = "\"\"";
+      action = "vi\"";
+      desc = "Select inside double quotes";
+      silent = true;
+    }
   ];
 }
