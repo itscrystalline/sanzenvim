@@ -26,7 +26,7 @@
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       armCrossPkgs = (import nixpkgs {inherit system;}).pkgsCross.aarch64-multiplatform;
-      pkgs = withCross:
+      pkgsfn = withCross:
         import nixpkgs {
           inherit system;
           overlays =
@@ -45,8 +45,8 @@
         crossCompilex86_64ToArm ? false,
       }:
         (nvf.lib.neovimConfiguration {
-          pkgs = pkgs crossCompilex86_64ToArm;
-          extraSpecialArgs = {inherit nvf my-nur full;};
+          pkgs = pkgsfn crossCompilex86_64ToArm;
+          extraSpecialArgs = {inherit nvf full;};
           modules =
             [
               ./options.nix
@@ -77,7 +77,9 @@
         };
       };
 
-      bundlers.simple = drv:
+      bundlers.simple = drv: let
+        pkgs = pkgsfn false;
+      in
         (import ./simple-bundler.nix) {
           inherit pkgs;
           nix-portable-bundler = nix-portable.bundlers.${system}.default;
