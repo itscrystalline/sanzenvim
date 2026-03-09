@@ -46,7 +46,7 @@
       }:
         (nvf.lib.neovimConfiguration {
           pkgs = pkgsfn crossCompilex86_64ToArm;
-          extraSpecialArgs = {inherit nvf full;};
+          extraSpecialArgs = {inherit nvf my-nur full;};
           modules =
             [
               ./options.nix
