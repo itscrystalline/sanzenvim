@@ -71,7 +71,7 @@ in {
   vim.pluginRC = lib.mkIf full {
     # TODO: keep until v0.9 is out
     image-nvim = lib.mkForce (entryAnywhere ''
-      if not vim.g.started_by_firenvim or not vim.g.neovide then
+      if not (vim.g.started_by_firenvim or vim.g.neovide) then
         require("image").setup(
             ${toLuaObject config.vim.utility.images.image-nvim.setupOpts}
         )
