@@ -38,7 +38,7 @@ jobs:
         nix_path: nixpkgs=channel:nixos-25.11
         extra_nix_config: |
           extra-substituters = http://cache.crys
-          extra-trusted-public-keys = mingzhu:cb5+q/qQiRYrsqCR9ry2TYaWLXPmtPIHJ7RdMSs1SLc=
+          extra-trusted-public-keys = mingzhu:V0KsUipFnrBNsfUD8VI0rFXQpgE3KKJfRby9Jm8cLTQ=
           connect-timeout = 30
           stall-timeout = 600
           fallback = true
