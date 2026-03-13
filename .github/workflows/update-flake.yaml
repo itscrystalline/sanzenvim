@@ -46,7 +46,7 @@ jobs:
     - name: Build
       id: build
       run: |
-        outpath=$(nix build .# --no-link --print-out-paths)
+        outpath=$(nix build .# --no-link --print-out-paths -L)
         echo "outpath=${outpath}" >> "$GITHUB_OUTPUT"
         echo "Output path: ${outpath}"
 
