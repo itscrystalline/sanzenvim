@@ -1,0 +1,56 @@
+name: Update flake lockfile
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 3,6"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: "update flake lockfiles & upload to my binary cache"
+    runs-on: ${{ matrix.platform.on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: 
+          - on: ubuntu-latest 
+            name: x86_64
+          - on: ubuntu-24.04-arm 
+            name: aarch64
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Tailscale
+      uses: tailscale/github-action@v4
+      with:
+        oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+        oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+        tags: tag:ci
+
+    - name: Install Nix
+      uses: cachix/install-nix-action@v30
+      with:
+        nix_path: nixpkgs=channel:nixos-25.11
+        extra_nix_config: |
+            extra-substituters = http://cache.crys
+            extra-trusted-public-keys = mingzhu:cb5+q/qQiRYrsqCR9ry2TYaWLXPmtPIHJ7RdMSs1SLc=
+
+    - name: Update flake inputs
+      run: nix flake update
+
+    - name: Build
+      id: build
+      run: |
+        outpath=$(nix build .# --no-link --print-out-paths)
+        echo "outpath=${outpath}" >> "$GITHUB_OUTPUT"
+        echo "Output path: ${outpath}"
+
+    - name: Upload Nix build artifacts to cache
+      env: 
+        OUTPATH: ${{ steps.build.outputs.outpath }}
+      run: nix copy --to "http://cache.crys" $OUTPATH
