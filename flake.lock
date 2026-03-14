@@ -117,26 +117,6 @@
         "type": "github"
       }
     },
-    "my-nur": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1773067698,
-        "narHash": "sha256-urvTBgWoGMCtbZJfz+VINgH2ppC2yPhjxTDpHv+pDYM=",
-        "owner": "itscrystalline",
-        "repo": "nur-packages",
-        "rev": "7f9ef220586c2a9c03b279fe202e591ca5433b48",
-        "type": "github"
-      },
-      "original": {
-        "owner": "itscrystalline",
-        "repo": "nur-packages",
-        "type": "github"
-      }
-    },
     "ndg": {
       "inputs": {
         "nixpkgs": [
@@ -300,7 +280,6 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "my-nur": "my-nur",
         "nix-portable": "nix-portable",
         "nixpkgs": "nixpkgs_2",
         "nvf": "nvf"
