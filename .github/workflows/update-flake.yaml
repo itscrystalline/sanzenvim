@@ -2,6 +2,11 @@ name: Update flake lockfile
 
 on:
   workflow_dispatch:
+    inputs:
+      force-rebuild:
+        type: boolean
+        default: false
+
   schedule:
     - cron: "0 0 * * 3,6"
 
@@ -31,7 +36,7 @@ jobs:
         oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
         tags: tag:ci
-
+          
     - name: Install Nix
       uses: cachix/install-nix-action@v30
       with:
@@ -41,23 +46,43 @@ jobs:
           extra-trusted-public-keys = mingzhu:V0KsUipFnrBNsfUD8VI0rFXQpgE3KKJfRby9Jm8cLTQ=
           connect-timeout = 30
           fallback = true
+          post-build-hook = /tmp/post-build-hook.sh
 
     - name: Update flake inputs
-      run: nix flake update
+      id: check-updates
+      run: | 
+        nix flake update
+        if [[ -z "$(git status -s)" ]]; then
+          echo "updated=0" >> "$GITHUB_OUTPUT"
+          echo "Nothing updated. Nothing needs to be done."
+        else
+          echo "updated=1" >> "$GITHUB_OUTPUT"
+        fi
 
-    - name: Build
-      id: build
+    - name: Set up post build hook
+      if: >-
+        steps.check-updates.outputs.updated == '1' ||
+        github.event.inputs.force-rebuild == 'true'
       run: |
-        outpath=$(nix build .# --no-link --print-out-paths -L)
-        echo "outpath=${outpath}" >> "$GITHUB_OUTPUT"
-        echo "Output path: ${outpath}"
+        cat > /tmp/post-build-hook.sh << EOF
+        set -euf
+        if [ -n "$OUT_PATHS" ]; then
+          echo "Uploading paths" $OUT_PATHS
+          NIX_SSHOPTS="-o StrictHostKeyChecking=no" nix copy --to "ssh://nixremote@mingzhu" $OUT_PATHS
+        fi
+        EOF
+        chmod +x /tmp/post-build-hook.sh
 
-    - name: Upload Nix build artifacts to cache
-      env: 
-        OUTPATH: ${{ steps.build.outputs.outpath }}
-      run: NIX_SSHOPTS="-o StrictHostKeyChecking=no" nix copy --to "ssh://nixremote@mingzhu" $OUTPATH
+    - name: Build & Upload
+      if: >-
+        steps.check-updates.outputs.updated == '1' ||
+        github.event.inputs.force-rebuild == 'true'
+      run: nix build .# --no-link --print-out-paths -L
 
     - name: Commit
+      if: >-
+        steps.check-updates.outputs.updated == '1' ||
+        github.event.inputs.force-rebuild == 'true'
       uses: EndBug/add-and-commit@v9
       with:
         default_author: github_actions
