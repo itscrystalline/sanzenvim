@@ -7,10 +7,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    my-nur = {
-      url = "github:itscrystalline/nur-packages";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-portable = {
       url = "github:DavHau/nix-portable";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,7 +16,6 @@
     nixpkgs,
     flake-utils,
     nvf,
-    my-nur,
     nix-portable,
     ...
   }:
@@ -46,7 +41,7 @@
       }:
         (nvf.lib.neovimConfiguration {
           pkgs = pkgsfn crossCompilex86_64ToArm;
-          extraSpecialArgs = {inherit nvf my-nur full;};
+          extraSpecialArgs = {inherit nvf full;};
           modules =
             [
               ./options.nix
