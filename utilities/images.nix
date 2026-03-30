@@ -73,7 +73,7 @@ in {
     image-nvim = lib.mkForce (entryAnywhere ''
       if not (vim.g.started_by_firenvim or vim.g.neovide) then
         require("image").setup(
-            ${toLuaObject config.vim.utility.images.image-nvim.setupOpts}
+          ${toLuaObject config.vim.utility.images.image-nvim.setupOpts}
         )
       end
     '');
