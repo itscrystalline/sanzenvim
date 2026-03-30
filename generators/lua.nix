@@ -3,7 +3,7 @@
   unwrapped,
 }: let
   nixStorePathSedPattern = "s|/nix/store/[^/]*/bin/||g";
-  initWrapper = builtins.readFile ./lua-init-wrapper.lua;
+  init = builtins.readFile ./init.lua;
 in
   pkgs.stdenvNoCC.mkDerivation {
     pname = "sanzenvim-lua";
@@ -32,7 +32,7 @@ in
         ${pkgs.gnused}/bin/sed '${nixStorePathSedPattern}' > "$out/sanzenvim.generated.lua"
 
       cat > "$out/init.lua" <<'LUA'
-      ${initWrapper}
+      ${init}
       LUA
     '';
   }
