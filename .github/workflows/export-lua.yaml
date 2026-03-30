@@ -1,0 +1,61 @@
+name: Export Pure Lua Config
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - .github/**
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    name: "Export init.lua (${{ matrix.platform.name }})"
+    runs-on: ${{ matrix.platform.on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - on: ubuntu-latest
+            name: linux-x86_64
+          - on: ubuntu-24.04-arm
+            name: linux-aarch64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v30
+        with:
+          nix_path: nixpkgs=channel:nixos-25.11
+          extra_nix_config: |
+            extra-substituters = http://cache.crys
+            extra-trusted-public-keys = mingzhu:V0KsUipFnrBNsfUD8VI0rFXQpgE3KKJfRby9Jm8cLTQ=
+            connect-timeout = 30
+            fallback = true
+
+      - name: Build
+        run: |
+          nix build .#lua -L
+          mkdir -p ./export
+          cp -R ./result/. ./export/
+
+      - name: Upload exported Lua config
+        uses: actions/upload-artifact@v4
+        with:
+          name: sanzenvim-lua-${{ matrix.platform.name }}
+          path: |
+            export/init.lua
+            export/sanzenvim.generated.lua
+            export/pack
