@@ -56,10 +56,14 @@
             ++ extraModules;
         }).neovim;
     in {
-      packages = {
+      packages = rec {
         default = nvim {};
         mini = nvim {full = false;};
-        unwrapped = nvim {extraModules = [./unwrapped.nix];};
+        unwrapped = nvim {extraModules = [./generators/unwrapped.nix];};
+        exportLua = import ./generators/export-lua.nix {
+          inherit unwrapped;
+          pkgs = pkgsfn false;
+        };
 
         defaultCross = nvim {crossCompilex86_64ToArm = true;};
         miniCross = nvim {
@@ -67,7 +71,7 @@
           crossCompilex86_64ToArm = true;
         };
         unwrappedCross = nvim {
-          extraModules = [./unwrapped.nix];
+          extraModules = [./generators/unwrapped.nix];
           crossCompilex86_64ToArm = true;
         };
       };
@@ -75,7 +79,7 @@
       bundlers.simple = drv: let
         pkgs = pkgsfn false;
       in
-        (import ./simple-bundler.nix) {
+        (import ./generators/simple-bundler.nix) {
           inherit pkgs;
           nix-portable-bundler = nix-portable.bundlers.${system}.default;
         }
