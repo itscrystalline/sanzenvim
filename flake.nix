@@ -60,7 +60,7 @@
         default = nvim {};
         mini = nvim {full = false;};
         unwrapped = nvim {extraModules = [./generators/unwrapped.nix];};
-        exportLua = import ./generators/export-lua.nix {
+        lua = import ./generators/lua.nix {
           inherit unwrapped;
           pkgs = pkgsfn false;
         };

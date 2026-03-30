@@ -47,7 +47,7 @@ jobs:
 
       - name: Build
         run: |
-          nix build .#exportLua -L
+          nix build .#lua -L
           mkdir -p ./export
           cp -R ./result/. ./export/
 

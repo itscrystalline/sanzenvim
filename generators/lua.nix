@@ -3,7 +3,7 @@
   unwrapped,
 }: let
   nixStorePathSedPattern = "s|/nix/store/[^/]*/bin/||g";
-  initWrapper = builtins.readFile ./export-lua-init-wrapper.lua;
+  initWrapper = builtins.readFile ./lua-init-wrapper.lua;
 in
   pkgs.stdenvNoCC.mkDerivation {
     pname = "sanzenvim-lua";
