@@ -13,6 +13,7 @@ in
     nativeBuildInputs = [
       pkgs.gnused
       pkgs.coreutils
+      pkgs.findutils
     ];
 
     buildCommand = ''
@@ -27,6 +28,7 @@ in
       fi
 
       ${pkgs.coreutils}/bin/cp -RL "$config_dir/pack" "$out/pack"
+      ${pkgs.findutils}/bin/find "$out/pack" -type f \( -name "*.so" -o -name "*.dll" -o -name "*.dylib" \) -delete
 
       ${unwrapped}/bin/nvf-print-config | \
         ${pkgs.gnused}/bin/sed '${nixStorePathSedPattern}' > "$out/sanzenvim.generated.lua"

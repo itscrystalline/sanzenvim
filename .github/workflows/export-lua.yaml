@@ -7,6 +7,7 @@ on:
       - main
     paths-ignore:
       - .github/**
+      - README.md
 
 permissions:
   contents: read
@@ -14,15 +15,9 @@ permissions:
 jobs:
   export:
     name: "Export init.lua (${{ matrix.platform.name }})"
-    runs-on: ${{ matrix.platform.on }}
+    runs-on: ubuntu-24.04-arm
     strategy:
       fail-fast: false
-      matrix:
-        platform:
-          - on: ubuntu-latest
-            name: linux-x86_64
-          - on: ubuntu-24.04-arm
-            name: linux-aarch64
 
     steps:
       - name: Checkout code
