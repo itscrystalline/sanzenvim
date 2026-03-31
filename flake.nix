@@ -61,7 +61,14 @@
         mini = nvim {full = false;};
         unwrapped = nvim {extraModules = [./generators/unwrapped.nix];};
         lua = import ./generators/lua.nix {
-          inherit unwrapped;
+          unwrapped = nvim {
+            extraModules = [
+              ./generators/unwrapped.nix
+              ({lib, ...}: {
+                vim.autocomplete.blink-cmp.setupOpts.fuzzy.prebuilt_binaries.download = lib.mkForce true;
+              })
+            ];
+          };
           pkgs = pkgsfn false;
         };
 
