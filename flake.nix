@@ -36,12 +36,13 @@
 
       nvim = {
         full ? true,
+        icons ? full,
         extraModules ? [],
         crossCompilex86_64ToArm ? false,
       }:
         (nvf.lib.neovimConfiguration {
           pkgs = pkgsfn crossCompilex86_64ToArm;
-          extraSpecialArgs = {inherit nvf full;};
+          extraSpecialArgs = {inherit nvf full icons;};
           modules =
             [
               ./options.nix
@@ -56,12 +57,13 @@
             ++ extraModules;
         }).neovim;
     in {
-      packages = rec {
+      packages = {
         default = nvim {};
         mini = nvim {full = false;};
         unwrapped = nvim {extraModules = [./generators/unwrapped.nix];};
         lua = import ./generators/lua.nix {
           unwrapped = nvim {
+            full = true;
             extraModules = [
               ./generators/unwrapped.nix
               ({lib, ...}: {

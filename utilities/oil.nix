@@ -1,6 +1,7 @@
 {
   lib,
   full,
+  icons,
   ...
 }: {
   vim = {
@@ -8,7 +9,7 @@
       enable = true;
       setupOpts = {
         columns =
-          lib.optionals full ["icon"]
+          lib.optionals icons ["icon"]
           ++ [
             "size"
           ];

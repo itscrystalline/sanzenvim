@@ -1,6 +1,7 @@
 {
   lib,
   full,
+  icons,
   ...
 }: {
   vim.languages.markdown = {
@@ -8,7 +9,7 @@
     extensions.markview-nvim = {
       enable = true;
       setupOpts = {
-        preview.icon_provider = lib.optionalString full "mini";
+        preview.icon_provider = lib.optionalString icons "mini";
         typst = {
           code_blocks = {
             pad_amount = 0;

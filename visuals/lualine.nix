@@ -1,4 +1,8 @@
-{full, ...}: {
+{
+  full,
+  icons,
+  ...
+}: {
   vim.statusline.lualine = {
     enable = true;
     disabledFiletypes = [
@@ -12,19 +16,19 @@
           {
             "mode",
             icons_enabled = ${
-            if full
+            if icons
             then "true"
             else "false"
           },
             separator = {
               left = '${
-            if full
+            if icons
             then "▎"
             else ""
           }',
               right = '${
-            if full
-            then ""
+            if icons
+            then ""
             else "▒"
           }'
             },
@@ -37,7 +41,7 @@
             "filetype",
             colored = true,
             icons_enabled = ${
-            if full
+            if icons
             then "true"
             else "false"
           },
@@ -48,13 +52,13 @@
           {
             "filename",
             ${
-            if full
-            then "symbols = {modified = ' ', readonly = ' '}"
+            if icons
+            then "symbols = {modified = ' ', readonly = ' '}"
             else "symbols = {modified = 'M', readonly = 'RO'}"
           },
             separator = {right = '${
-            if full
-            then ""
+            if icons
+            then ""
             else "▒"
           }'}
           }
@@ -73,8 +77,8 @@
             },
             symbols = {added = '+', modified = '~', removed = '-'}, -- Changes the diff symbols
             separator = {right = '${
-            if full
-            then ""
+            if icons
+            then ""
             else "▒"
           }'}
           }
@@ -105,19 +109,19 @@
               end
 
               return ${
-            if full
+            if icons
             then ''require("mini.icons").get("file", vim.api.nvim_buf_get_name(bufnr)) .. " " ..''
             else ""
           } table.concat(active_clients, ", ")
             end,
             ${
-            if full
-            then "icon = ' ',"
+            if icons
+            then "icon = ' ',"
             else "icon = 'LSP',"
           }
             separator = {left = '${
-            if full
-            then ""
+            if icons
+            then ""
             else "▒"
           }'},
           }
@@ -127,8 +131,8 @@
             "diagnostics",
             sources = {'nvim_lsp', 'nvim_diagnostic', 'nvim_diagnostic', 'vim_lsp', 'coc'},
             ${
-            if full
-            then "symbols = {error = '󰅙  ', warn = '  ', info = '  ', hint = '󰌵 '},"
+            if icons
+            then "symbols = {error = '󰅙  ', warn = '  ', info = '  ', hint = '󰌵 '},"
             else "symbols = {error = 'E ', warn = 'W ', info = 'I ', hint = 'H '},"
           }
             colored = true,
@@ -148,12 +152,12 @@
             "",
             draw_empty = true,
             separator = { left = '${
-            if full
-            then ""
+            if icons
+            then ""
             else "▒"
           }', right = '${
-            if full
-            then ""
+            if icons
+            then ""
             else "▒"
           }' }
           }
@@ -164,8 +168,8 @@
             maxcount = 999,
             timeout = 120,
             separator = {left = '${
-            if full
-            then ""
+            if icons
+            then ""
             else "▒"
           }'}
           }
@@ -174,13 +178,13 @@
           {
             "branch",
             icons_enabled = ${
-            if full
+            if icons
             then "true"
             else "false"
           },
             separator = {left = '${
-            if full
-            then ""
+            if icons
+            then ""
             else "▒"
           }'}
           }
@@ -191,8 +195,8 @@
           {
             "progress",
             separator = {left = '${
-            if full
-            then ""
+            if icons
+            then ""
             else "▒"
           }'}
           }

@@ -1,4 +1,8 @@
-{full, ...}: {
+{
+  full,
+  icons,
+  ...
+}: {
   vim = {
     lsp.lspsaga = {
       enable = true;
@@ -6,7 +10,7 @@
         ui = {
           border = "rounded"; # One of none, single, double, rounded, solid, shadow
           code_action =
-            if full
+            if icons
             then "💡"
             else "!!"; # Can be any symbol you want 💡
         };

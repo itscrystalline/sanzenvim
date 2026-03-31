@@ -2,6 +2,7 @@
   pkgs,
   lib,
   full,
+  icons,
   ...
 }: let
   deepMergeWithLists = lhs: rhs:
@@ -69,7 +70,7 @@ in {
           menu.draw.columns = lib.mkLuaInline ''
             {
               ${
-              if full
+              if icons
               then ''{ "kind_icon" },''
               else ""
             }

@@ -1,16 +1,17 @@
 {
   lib,
   full,
+  icons,
   ...
 }: let
-  icons =
-    if full
+  iconChars =
+    if icons
     then {
       buffer_close_icon = "󰅖";
       modified_icon = "● ";
-      close_icon = " ";
-      left_trunc_marker = " ";
-      right_trunc_marker = " ";
+      close_icon = " ";
+      left_trunc_marker = " ";
+      right_trunc_marker = " ";
     }
     else {
       buffer_close_icon = "X";
@@ -37,7 +38,7 @@ in {
           separator_style = "thick";
           numbers = "none";
           indicator =
-            if full
+            if icons
             then {
               icon = "▎";
               style = "icon";
@@ -46,7 +47,7 @@ in {
               style = "underline";
             };
         }
-        // icons;
+        // iconChars;
     };
   };
   vim.keymaps = [
