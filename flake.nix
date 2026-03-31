@@ -67,7 +67,10 @@
             extraModules = [
               ./generators/unwrapped.nix
               ({lib, ...}: {
-                vim.autocomplete.blink-cmp.setupOpts.fuzzy.prebuilt_binaries.download = lib.mkForce true;
+                vim.autocomplete.blink-cmp.setupOpts.fuzzy = {
+                  prebuilt_binaries.download = lib.mkForce true;
+                  implementation = lib.mkForce "lua";
+                };
               })
             ];
           };

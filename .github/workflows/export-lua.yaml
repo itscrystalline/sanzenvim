@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   export:
-    name: "Export init.lua (${{ matrix.platform.name }})"
+    name: "Export init.lua"
     runs-on: ubuntu-24.04-arm
     strategy:
       fail-fast: false
@@ -49,7 +49,7 @@ jobs:
       - name: Upload exported Lua config
         uses: actions/upload-artifact@v4
         with:
-          name: sanzenvim-lua-${{ matrix.platform.name }}
+          name: sanzenvim-lua
           path: |
             export/init.lua
             export/sanzenvim.generated.lua

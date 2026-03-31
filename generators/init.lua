@@ -14,7 +14,7 @@ local config_file = config_dir .. "/sanzenvim.generated.lua"
 
 vim.api.nvim_create_autocmd("VimEnter", {
 	callback = function()
-		vim.cmd([[TSInstall! lua nix markdown markdown_inline vim vimdoc bash json yaml toml]])
+		vim.cmd("TSInstall " .. treesitter_parsers)
 	end,
 	once = true,
 })
