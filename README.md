@@ -14,10 +14,9 @@ Portable Neovim configuration built with
 
 ---
 
-| Lua Config | Link                                                                                                         |
-| ---------- | ------------------------------------------------------------------------------------------------------------ |
-| x86_64     | https://nightly.link/itscrystalline/sanzenvim/workflows/export-lua.yaml/main/sanzenvim-lua-linux-aarch64.zip |
-| aarch64    | https://nightly.link/itscrystalline/sanzenvim/workflows/export-lua.yaml/main/sanzenvim-lua-linux-aarch64.zip |
+## Lua config
+
+https://nightly.link/itscrystalline/sanzenvim/workflows/export-lua.yaml/main/sanzenvim-lua.zip
 
 Lua config requires compiling `telescope-fzf-native` manually.
 
