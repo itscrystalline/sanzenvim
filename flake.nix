@@ -2,6 +2,7 @@
   description = "sanzenvim (燦然vim)";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.11";
     nvf = {
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,6 +15,7 @@
   };
   outputs = {
     nixpkgs,
+    nixpkgs-stable,
     flake-utils,
     nvf,
     nix-portable,
@@ -34,6 +36,8 @@
             else [];
         };
 
+      neovim-unwrapped = nixpkgs-stable.legacyPackages.${system}.neovim-unwrapped;
+
       nvim = {
         full ? true,
         icons ? full,
@@ -45,6 +49,8 @@
           extraSpecialArgs = {inherit nvf full icons;};
           modules =
             [
+              {vim.package = neovim-unwrapped;}
+
               ./options.nix
               ./neovide.nix
               ./keymaps.nix
