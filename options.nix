@@ -1,88 +1,87 @@
 {
-  # pkgs,
   lib,
-  # config,
-  # options,
+  full,
   ...
 }: {
-  vim.options = {
-    number = true;
-    relativenumber = true;
+  vim = {
+    options = {
+      number = true;
+      relativenumber = true;
 
-    mouse = "a";
+      mouse = "a";
 
-    shiftwidth = 2;
-    tabstop = 2;
-    softtabstop = 2;
-    showtabline = 2;
-    expandtab = true;
-    smartindent = true;
+      shiftwidth = 2;
+      tabstop = 2;
+      softtabstop = 2;
+      showtabline = 2;
+      expandtab = true;
+      smartindent = true;
 
-    breakindent = true;
+      breakindent = true;
 
-    hlsearch = true;
-    incsearch = true;
+      hlsearch = true;
+      incsearch = true;
 
-    wrap = true;
+      wrap = true;
 
-    splitbelow = true;
-    splitright = true;
+      splitbelow = true;
+      splitright = true;
 
-    ignorecase = true;
-    smartcase = true; # Don't ignore case with capitals
-    grepprg = "rg --vimgrep";
-    grepformat = "%f:%l:%c:%m";
+      ignorecase = true;
+      smartcase = true; # Don't ignore case with capitals
+      grepprg = "rg --vimgrep";
+      grepformat = "%f:%l:%c:%m";
 
-    updatetime = 50; # faster completion (4000ms default)
+      updatetime = 50; # faster completion (4000ms default)
 
-    completeopt = lib.concatStringsSep "," [
-      "menuone"
-      "noselect"
-      "noinsert"
-    ]; # mostly just for cmp
+      completeopt = lib.concatStringsSep "," [
+        "menuone"
+        "noselect"
+        "noinsert"
+      ]; # mostly just for cmp
 
-    swapfile = false;
-    backup = false;
-    undofile = true;
+      swapfile = false;
+      backup = false;
+      undofile = true;
 
-    # Enable 24-bit colors
-    termguicolors = true;
+      # Enable 24-bit colors
+      termguicolors = true;
 
-    # Enable the sign column to prevent the screen from jumping
-    signcolumn = "yes";
+      # Enable the sign column to prevent the screen from jumping
+      signcolumn = "yes";
 
-    # Enable cursor line highlight
-    cursorline = false; # Highlight the line where the cursor is located
+      # Enable cursor line highlight
+      cursorline = false; # Highlight the line where the cursor is located
 
-    foldcolumn = "0";
-    foldlevel = 99;
-    foldlevelstart = 99;
-    foldenable = true;
+      foldcolumn = "0";
+      foldlevel = 99;
+      foldlevelstart = 99;
+      foldenable = true;
 
-    # too much eats into text
-    scrolloff = 2;
+      # too much eats into text
+      scrolloff = 2;
+      timeoutlen = 200;
+      encoding = "utf-8";
+      fileencoding = "utf-8";
+      list = true; # Show invisible characters (tabs, eol, ...)
+      listchars = "eol:↲,tab:|->,lead:·,space: ,trail:•,extends:→,precedes:←,nbsp:␣";
+      fillchars = "eob: ";
 
-    timeoutlen = 200;
+      showmode = false;
 
-    encoding = "utf-8";
-    fileencoding = "utf-8";
+      pumheight = 0;
 
-    list = true; # Show invisible characters (tabs, eol, ...)
-    listchars = "eol:↲,tab:|->,lead:·,space: ,trail:•,extends:→,precedes:←,nbsp:␣";
+      laststatus = 3; # (https://neovim.io/doc/user/options.html#'laststatus')
 
-    # We don't need to see things like INSERT anymore
-    showmode = false;
+      inccommand = "split"; # (https://neovim.io/doc/user/options.html#'inccommand')
+    };
 
-    # Maximum number of items to show in the popup menu (0 means "use available screen space")
-    pumheight = 0;
+    # turn this off if having issues
+    enableLuaLoader = true;
 
-    # formatexpr = "v:lua.require'conform'.formatexpr()";
+    withPython3 = full;
+    withNodeJs = full;
 
-    laststatus = 3; # (https://neovim.io/doc/user/options.html#'laststatus')
-
-    inccommand = "split"; # (https://neovim.io/doc/user/options.html#'inccommand')
+    highlight.EndOfBuffer.blend = 0;
   };
-
-  # turn this off if having issues
-  vim.enableLuaLoader = true;
 }
