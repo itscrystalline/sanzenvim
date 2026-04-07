@@ -22,9 +22,13 @@
     ];
     # capabilities = [
     # ];
-    settings.ty = {
-      completions.autoImport = true;
-      inlayHints.variableTypes = true;
+    settings = {
+      ty = {
+        completions.autoImport = true;
+        inlayHints.variableTypes = true;
+      };
+      # Disable unused expression warnings for notebook environments
+      python.analysis.diagnosticSeverityOverrides.reportUnusedExpression = "none";
     };
   };
 }

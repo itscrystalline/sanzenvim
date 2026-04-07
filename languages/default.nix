@@ -7,6 +7,7 @@
     ./blink-cmp.nix
     ./conform.nix
     ./lspsaga.nix
+    ./jupyter.nix
 
     ./dap
 
