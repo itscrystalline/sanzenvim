@@ -68,6 +68,27 @@
         "type": "github"
       }
     },
+    "flake-parts_2": {
+      "inputs": {
+        "nixpkgs-lib": [
+          "upstream-nur",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1733312601,
+        "narHash": "sha256-4pDvzqnegAfRkPwO3wmwBhVi/Sye1mzps0zHWYnP88c=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "205b12d8b7cd4802fbcb8e8ef6a0f1408781a4f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -114,6 +135,26 @@
       "original": {
         "owner": "Gerg-L",
         "repo": "mnw",
+        "type": "github"
+      }
+    },
+    "my-nur": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775548231,
+        "narHash": "sha256-/SqLEyo2Bs5pCF2TA8TWAhan/u5bQshtFJD2Yh1Ex/g=",
+        "owner": "itscrystalline",
+        "repo": "nur-packages",
+        "rev": "c6ce3cc52639dfb92a8209bff7c20899e1a3fcd5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "itscrystalline",
+        "repo": "nur-packages",
         "type": "github"
       }
     },
@@ -296,10 +337,12 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
+        "my-nur": "my-nur",
         "nix-portable": "nix-portable",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-stable": "nixpkgs-stable",
-        "nvf": "nvf"
+        "nvf": "nvf",
+        "upstream-nur": "upstream-nur"
       }
     },
     "systems": {
@@ -329,6 +372,27 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "upstream-nur": {
+      "inputs": {
+        "flake-parts": "flake-parts_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775548335,
+        "narHash": "sha256-JDjLZNZPTv0kIh1+u/4t7QkQKAsikse34lHwPLMEHmg=",
+        "owner": "nix-community",
+        "repo": "NUR",
+        "rev": "95dfe0b972b976c9ed6d5b0148b783bddc7ec7d2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "NUR",
         "type": "github"
       }
     }

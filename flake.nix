@@ -12,6 +12,15 @@
       url = "github:DavHau/nix-portable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    upstream-nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    my-nur = {
+      url = "github:itscrystalline/nur-packages";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     nixpkgs,
@@ -19,34 +28,24 @@
     flake-utils,
     nvf,
     nix-portable,
+    upstream-nur,
+    my-nur,
     ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
-      armCrossPkgs = (import nixpkgs {inherit system;}).pkgsCross.aarch64-multiplatform;
-      pkgsfn = withCross:
-        import nixpkgs {
-          inherit system;
-          overlays =
-            if withCross
-            then [
-              (_: _: {
-                inherit (armCrossPkgs) rustPlatform;
-              })
-            ]
-            else [];
-        };
+      pkgs = import nixpkgs {inherit system;};
+      nur = (import upstream-nur {inherit pkgs;}) // {repos.itscrystalline = import my-nur {inherit pkgs;};};
 
-      neovim-unwrapped = nixpkgs-stable.legacyPackages.${system}.neovim-unwrapped;
+      inherit (nixpkgs-stable.legacyPackages.${system}) neovim-unwrapped;
 
       nvim = {
         full ? true,
         icons ? full,
         extraModules ? [],
-        crossCompilex86_64ToArm ? false,
       }:
         (nvf.lib.neovimConfiguration {
-          pkgs = pkgsfn crossCompilex86_64ToArm;
-          extraSpecialArgs = {inherit nvf full icons;};
+          inherit pkgs;
+          extraSpecialArgs = {inherit nur nvf full icons;};
           modules =
             [
               {vim.package = neovim-unwrapped;}
@@ -68,6 +67,7 @@
         mini = nvim {full = false;};
         unwrapped = nvim {extraModules = [./generators/unwrapped.nix];};
         lua = import ./generators/lua.nix {
+          inherit pkgs;
           unwrapped = nvim {
             full = true;
             extraModules = [
@@ -80,23 +80,10 @@
               })
             ];
           };
-          pkgs = pkgsfn false;
-        };
-
-        defaultCross = nvim {crossCompilex86_64ToArm = true;};
-        miniCross = nvim {
-          full = false;
-          crossCompilex86_64ToArm = true;
-        };
-        unwrappedCross = nvim {
-          extraModules = [./generators/unwrapped.nix];
-          crossCompilex86_64ToArm = true;
         };
       };
 
-      bundlers.simple = drv: let
-        pkgs = pkgsfn false;
-      in
+      bundlers.simple = drv:
         (import ./generators/simple-bundler.nix) {
           inherit pkgs;
           nix-portable-bundler = nix-portable.bundlers.${system}.default;
