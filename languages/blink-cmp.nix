@@ -97,11 +97,6 @@ in {
           package = "blink-ripgrep-nvim";
         }
         {
-          name = "emoji";
-          module = "blink-emoji";
-          package = "blink-emoji-nvim";
-        }
-        {
           name = "nerdfont";
           module = "blink-nerdfont";
           package = pkgs.vimPlugins.blink-nerdfont-nvim;
