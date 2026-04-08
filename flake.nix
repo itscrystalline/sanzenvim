@@ -18,7 +18,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     my-nur = {
-      url = "github:itscrystalline/nur-packages";
+      url = "git+https://git.iw2tryhard.dev/itscrystalline/nur-packages";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

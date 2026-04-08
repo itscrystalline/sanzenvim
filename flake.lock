@@ -145,17 +145,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1775557912,
-        "narHash": "sha256-Y4aYhTdWSsVxwHKvp/bzEFh8e7AayGbdKrcSblEaTb8=",
-        "owner": "itscrystalline",
-        "repo": "nur-packages",
-        "rev": "b059be38bc8242120a3de6d2db39f091b44f06d0",
-        "type": "github"
+        "lastModified": 1775644443,
+        "narHash": "sha256-LabwRurl/FE+6jKgK1xjQnD5uiH0likyZZHUQagx8BQ=",
+        "ref": "refs/heads/main",
+        "rev": "7ad087d9c3a51611dc94a5ed644a0b1e810db943",
+        "revCount": 54,
+        "type": "git",
+        "url": "https://git.iw2tryhard.dev/itscrystalline/nur-packages"
       },
       "original": {
-        "owner": "itscrystalline",
-        "repo": "nur-packages",
-        "type": "github"
+        "type": "git",
+        "url": "https://git.iw2tryhard.dev/itscrystalline/nur-packages"
       }
     },
     "ndg": {
