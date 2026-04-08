@@ -33,10 +33,19 @@
     ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = import nixpkgs {inherit system;};
+      pkgs-stable = import nixpkgs-stable {inherit system;};
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [
+          (_: _: {
+            # FIXME: wait until unstable.aarch64-linux.deno builds successfully to remove
+            inherit (pkgs-stable) deno;
+          })
+        ];
+      };
       nur = (import upstream-nur {inherit pkgs;}) // {repos.itscrystalline = import my-nur {inherit pkgs;};};
 
-      inherit (nixpkgs-stable.legacyPackages.${system}) neovim-unwrapped;
+      inherit (pkgs-stable) neovim-unwrapped;
 
       nvim = {
         full ? true,
