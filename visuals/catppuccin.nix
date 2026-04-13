@@ -14,6 +14,20 @@ _: {
             enabled = true,
             custom_bg = "NONE", -- "lualine" will set background to mantle
           },
+          lualine = {
+            all = function(colors)
+              return {
+                normal = {
+                  a = { bg = colors.pink },
+                  b = { fg = colors.pink },
+                },
+              }
+            end
+          },
+          mini = {
+            enabled = true,
+            indentscope_color = "pink", -- catppuccin color (eg. `lavender`) Default: text
+          },
         },
         flavor = "mocha",
         dim_inactive = {
