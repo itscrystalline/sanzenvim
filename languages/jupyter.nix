@@ -49,17 +49,10 @@ in {
     lazy.plugins = {
       molten-nvim = {
         package = pkgs.vimPlugins.molten-nvim;
-        before = ''
-          vim.cmd("UpdateRemotePlugins")
-        '';
         after = ''
           -- I find auto open annoying, keep in mind setting this option will require setting
           -- a keybind for `:noautocmd MoltenEnterOutput` to open the output again
           vim.g.molten_auto_open_output = false
-
-          -- this guide will be using image.nvim
-          -- Don't forget to setup and install the plugin if you want to view image outputs
-          vim.g.molten_image_provider = "image.nvim"
 
           -- optional, I like wrapping. works for virt text and the output window
           vim.g.molten_wrap_output = true
@@ -80,7 +73,7 @@ in {
         setupOpts = {
           lspFeatures = {
             enabled = true;
-            languages = ["python" "bash" "lua" "html"];
+            languages = ["python" "bash" "lua" "html" "r"];
             chunks = "all";
             diagnostics = {
               enabled = true;
@@ -100,6 +93,7 @@ in {
       "jupytext.nvim" = {
         package = pkgs.vimPlugins.jupytext-nvim;
         setupModule = "jupytext";
+        lazy = true;
         setupOpts = {
           style = "markdown";
           output_extension = "md";
@@ -180,7 +174,7 @@ in {
         mode = "n";
         key = "<leader>mrA";
         action = ''
-          require('quarto.runner').run_all(true)
+          function() require('quarto.runner').run_all(true) end
         '';
         desc = "Run all cells of all languages";
         silent = true;
@@ -192,6 +186,8 @@ in {
     autocmds = let
       fnBody = ''
         vim.schedule(function()
+          vim.cmd("UpdateRemotePlugins")
+          require('lz.n').trigger_load("jupytext.nvim")
           local kernels = vim.fn.MoltenAvailableKernels()
           local try_kernel_name = function()
             local metadata = vim.json.decode(io.open(e.file, "r"):read("a"))["metadata"]
