@@ -93,7 +93,6 @@ in {
       "jupytext.nvim" = {
         package = pkgs.vimPlugins.jupytext-nvim;
         setupModule = "jupytext";
-        lazy = true;
         setupOpts = {
           style = "markdown";
           output_extension = "md";
@@ -187,7 +186,7 @@ in {
       fnBody = ''
         vim.schedule(function()
           vim.cmd("UpdateRemotePlugins")
-          require('lz.n').trigger_load("jupytext.nvim")
+          require('lz.n').trigger_load("jupytext")
           local kernels = vim.fn.MoltenAvailableKernels()
           local try_kernel_name = function()
             local metadata = vim.json.decode(io.open(e.file, "r"):read("a"))["metadata"]
