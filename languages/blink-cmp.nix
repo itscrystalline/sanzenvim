@@ -102,11 +102,6 @@ in {
           package = pkgs.vimPlugins.blink-nerdfont-nvim;
         }
         {
-          name = "npm";
-          module = "blink-cmp-npm";
-          package = pkgs.vimPlugins.blink-cmp-npm-nvim;
-        }
-        {
           name = "spell";
           module = "blink-cmp-spell";
           package = "blink-cmp-spell";
