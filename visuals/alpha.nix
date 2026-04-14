@@ -38,7 +38,7 @@ in {
         type = "button";
         val = "${
           if icons
-          then "  "
+          then "󱋣  "
           else ""
         }Zoxide";
         on_press = mkLuaInline "function() require('telescope').extensions.zoxide.list() end";
@@ -68,7 +68,7 @@ in {
         type = "button";
         val = "${
           if icons
-          then "  "
+          then "  "
           else ""
         }Find File";
         on_press = mkLuaInline "function() require('telescope.builtin').find_files() end";
@@ -101,7 +101,7 @@ in {
           then ''require('mini.icons').get('directory', vim.fn.getcwd()) .. "  " ..''
           else ""
         }'Open Directory'";
-        on_press = mkLuaInline "function() require('telescope.builtin').find_files() end";
+        on_press = mkLuaInline "function() vim.cmd[[Oil]] end";
         opts = {
           # hl = "comment";
           keymap = [
@@ -128,7 +128,7 @@ in {
         type = "button";
         val = "${
           if icons
-          then "  "
+          then "  "
           else ""
         }New File";
         on_press = mkLuaInline "function() vim.cmd[[ene]] end";
@@ -188,7 +188,7 @@ in {
         type = "button";
         val = "${
           if icons
-          then "  "
+          then "  "
           else ""
         }Quit Neovim";
         on_press = mkLuaInline "function() vim.cmd[[qa]] end";

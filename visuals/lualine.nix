@@ -21,16 +21,8 @@
             else "false"
           },
             separator = {
-              left = '${
-            if icons
-            then "▎"
-            else ""
-          }',
-              right = '${
-            if icons
-            then ""
-            else "▒"
-          }'
+              left = "",
+              right = "🭬"
             },
           }
         ''
@@ -56,11 +48,7 @@
             then "symbols = {modified = ' ', readonly = ' '}"
             else "symbols = {modified = 'M', readonly = 'RO'}"
           },
-            separator = {right = '${
-            if icons
-            then ""
-            else "▒"
-          }'}
+            separator = {right = "🭬"}
           }
         ''
       ];
@@ -75,12 +63,12 @@
               modified = 'flamingo', -- Changes the diff's modified color
               removed  = 'red', -- Changes the diff's removed color you
             },
-            symbols = {added = '+', modified = '~', removed = '-'}, -- Changes the diff symbols
-            separator = {right = '${
+            symbols = {${
             if icons
-            then ""
-            else "▒"
-          }'}
+            then "added = '', modified = '', removed = ''"
+            else "added = '+', modified = '~', removed = '-'"
+          }}, -- Changes the diff symbols
+            separator = {right = "🭬"}
           }
         ''
       ];
@@ -100,7 +88,7 @@
               local clients = vim.lsp.get_clients({ bufnr = bufnr })
 
               if vim.tbl_isempty(clients) then
-                return "-"
+                return ""
               end
 
               local active_clients = {}
@@ -116,14 +104,10 @@
             end,
             ${
             if icons
-            then "icon = ' ',"
+            then "icon = ' ',"
             else "icon = 'LSP',"
           }
-            separator = {left = '${
-            if icons
-            then ""
-            else "▒"
-          }'},
+            separator = {left = "🭮"},
           }
         ''
         ''
@@ -132,7 +116,7 @@
             sources = {'nvim_lsp', 'nvim_diagnostic', 'nvim_diagnostic', 'vim_lsp', 'coc'},
             ${
             if icons
-            then "symbols = {error = '󰅙  ', warn = '  ', info = '  ', hint = '󰌵 '},"
+            then "symbols = {error = '󰅙 ', warn = ' ', info = ' ', hint = '󰌵 '},"
             else "symbols = {error = 'E ', warn = 'W ', info = 'I ', hint = 'H '},"
           }
             colored = true,
@@ -151,15 +135,7 @@
           {
             "",
             draw_empty = true,
-            separator = { left = '${
-            if icons
-            then ""
-            else "▒"
-          }', right = '${
-            if icons
-            then ""
-            else "▒"
-          }' }
+            separator = { left = "🭮", right = "🭮" }
           }
         ''
         ''
@@ -167,11 +143,7 @@
             'searchcount',
             maxcount = 999,
             timeout = 120,
-            separator = {left = '${
-            if icons
-            then ""
-            else "▒"
-          }'}
+            separator = {left = "🭮"}
           }
         ''
         ''
@@ -182,11 +154,7 @@
             then "true"
             else "false"
           },
-            separator = {left = '${
-            if icons
-            then ""
-            else "▒"
-          }'}
+            separator = {left = "🭮"}
           }
         ''
       ];
@@ -194,11 +162,7 @@
         ''
           {
             "progress",
-            separator = {left = '${
-            if icons
-            then ""
-            else "▒"
-          }'}
+            separator = {left = "🭮"}
           }
         ''
       ];
