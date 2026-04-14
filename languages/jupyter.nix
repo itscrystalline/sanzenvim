@@ -7,45 +7,6 @@
   inherit (lib.generators) mkLuaInline;
 in {
   vim = lib.mkIf full {
-    additionalRuntimePaths = [../nvim-runtime];
-
-    treesitter.textobjects = {
-      enable = true;
-      setupOpts = {
-        select = {
-          enable = true;
-          lookahead = true;
-          keymaps = {
-            # Code cell textobjects
-            "@code_cell.inner" = {
-              query = "@code_cell.inner";
-              desc = "in block";
-            };
-            "@code_cell.outer" = {
-              query = "@code_cell.outer";
-              desc = "around block";
-            };
-          };
-        };
-        move = {
-          enable = true;
-          set_jumps = true;
-          goto_next_start = {
-            "]b" = {
-              query = "@code_cell.inner";
-              desc = "next block";
-            };
-          };
-          goto_previous_start = {
-            "[b" = {
-              query = "@code_cell.inner";
-              desc = "previous block";
-            };
-          };
-        };
-      };
-    };
-
     lazy.plugins = {
       molten-nvim = {
         package = pkgs.vimPlugins.molten-nvim;
@@ -103,6 +64,20 @@ in {
 
     # Keymaps for notebook workflow
     keymaps = [
+      {
+        mode = "n";
+        key = "]b";
+        action = ":MoltenNext<CR>";
+        desc = "Next code cell";
+        silent = true;
+      }
+      {
+        mode = "n";
+        key = "[b";
+        action = ":MoltenPrev<CR>";
+        desc = "Previous code cell";
+        silent = true;
+      }
       # Molten evaluation keymaps
       {
         mode = "n";
