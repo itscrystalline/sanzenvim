@@ -41,6 +41,7 @@ _: {
             FloatBorder = { fg = colors.pink },
             LspInfoBorder = { fg = colors.pink },
             DapUIFloatBorder = { fg = colors.pink },
+            Directory = { fg = colors.pink },
             MiniNotifyBorder = { fg = colors.pink },
             NeoTreeDirectoryName = { fg = colors.pink },
             NeoTreeDirectoryIcon= { fg = colors.pink },
