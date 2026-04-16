@@ -65,7 +65,7 @@
             },
             symbols = {${
             if icons
-            then "added = '', modified = '', removed = ''"
+            then "added = ' ', modified = ' ', removed = ' '"
             else "added = '+', modified = '~', removed = '-'"
           }}, -- Changes the diff symbols
             separator = {right = "🭬"}
