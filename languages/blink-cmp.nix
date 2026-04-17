@@ -65,6 +65,7 @@ in {
       setupOpts = {
         cmdline.keymap.preset = "default";
         completion = {
+          trigger.show_on_blocked_trigger_characters = [" " "\n" "\t" ":"];
           documentation.auto_show_delay_ms = 50;
           ghost_text.enabled = true;
           menu.draw.columns = lib.mkLuaInline ''
