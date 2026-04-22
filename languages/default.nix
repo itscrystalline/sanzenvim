@@ -29,6 +29,7 @@
     ./typst.nix
     ./qml.nix
     ./shell.nix
+    ./dart.nix
   ];
   vim = {
     languages = {
