@@ -1,9 +1,11 @@
-{...}: {
-  vim.terminal.toggleterm.lazygit = {
-    enable = true;
-    direction = "float";
-    mappings = {
-      open = "<leader>gg";
-    };
-  };
+_: {
+  vim.keymaps = [
+    {
+      mode = "n";
+      key = "<leader>g";
+      action = '':silent! !zellij action new-pane -f --width 80\% --height 80\% -c -- lazygit<CR>'';
+      silent = true;
+      desc = "open lazygit in zellij float";
+    }
+  ];
 }

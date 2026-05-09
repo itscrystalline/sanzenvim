@@ -20,7 +20,7 @@ in {
     languages = {
       html.enable = true;
       css.enable = true;
-      ts = {
+      typescript = {
         enable = true;
         lsp.enable = false;
         treesitter.tsPackage = pkgs.vimPlugins.nvim-treesitter.builtGrammars.typescript;

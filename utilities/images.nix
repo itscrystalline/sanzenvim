@@ -2,10 +2,8 @@
   full,
   pkgs,
   lib,
-  config,
   ...
 }: let
-  inherit (lib.nvim.lua) toLuaObject;
 in {
   vim.lazy.plugins = lib.mkIf full {
     "img-clip.nvim" = {

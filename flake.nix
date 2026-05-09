@@ -46,7 +46,7 @@
       };
       nur = (import upstream-nur {inherit pkgs;}) // {repos.itscrystalline = import my-nur {inherit pkgs;};};
 
-      inherit (pkgs-stable) neovim-unwrapped;
+      # inherit (pkgs-stable) neovim-unwrapped;
 
       nvim = {
         full ? true,
@@ -58,7 +58,7 @@
           extraSpecialArgs = {inherit nur nvf full icons;};
           modules =
             [
-              {vim.package = neovim-unwrapped;}
+              # {vim.package = neovim-unwrapped;}
 
               ./options.nix
               ./neovide.nix

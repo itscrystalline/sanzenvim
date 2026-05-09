@@ -4,7 +4,6 @@
     ./mini.nix
     ./telescope.nix
     ./direnv.nix
-    ./nvim-tree.nix
     ./firenvim.nix
     ./neocord.nix
     ./silicon.nix
