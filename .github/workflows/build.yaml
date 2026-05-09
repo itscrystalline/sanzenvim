@@ -21,8 +21,8 @@ jobs:
       fail-fast: false
       matrix:
         platform: 
-          # - on: ubuntu-latest 
-          #   name: x86_64
+          - on: ubuntu-latest 
+            name: x86_64
           - on: ubuntu-24.04-arm 
             name: aarch64
         variant:
@@ -41,6 +41,16 @@ jobs:
     #     oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
     #     oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
     #     tags: tag:ci
+    - name: Set up post build hook
+      run: |
+        cat > /tmp/post-build-hook.sh << EOF
+        set -euf
+        if [ -n "$OUT_PATHS" ]; then
+        echo "Uploading paths" $OUT_PATHS
+        NIX_SSHOPTS="-o StrictHostKeyChecking=no" nix copy --to "ssh://nixremote@mingzhu" $OUT_PATHS
+        fi
+        EOF
+        chmod +x /tmp/post-build-hook.sh
           
     - name: Install Nix
       uses: cachix/install-nix-action@v30
@@ -52,17 +62,6 @@ jobs:
           connect-timeout = 30
           fallback = true
           post-build-hook = /tmp/post-build-hook.sh
-
-    - name: Set up post build hook
-      run: |
-        cat > /tmp/post-build-hook.sh << EOF
-        set -euf
-        if [ -n "$OUT_PATHS" ]; then
-          echo "Uploading paths" $OUT_PATHS
-          NIX_SSHOPTS="-o StrictHostKeyChecking=no" nix copy --to "ssh://nixremote@mingzhu" $OUT_PATHS
-        fi
-        EOF
-        chmod +x /tmp/post-build-hook.sh
 
     - name: Build
       run: |

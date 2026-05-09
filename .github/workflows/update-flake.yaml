@@ -16,15 +16,7 @@ permissions:
 jobs:
   build:
     name: "update flake lockfiles & upload to my binary cache"
-    runs-on: ${{ matrix.platform.on }}
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: 
-          # - on: ubuntu-latest 
-          #   name: x86_64
-          - on: ubuntu-24.04-arm 
-            name: aarch64
+    runs-on: ubuntu-24.04-arm
 
     steps:
     - name: Checkout code
@@ -36,6 +28,21 @@ jobs:
     #     oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
     #     oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
     #     tags: tag:ci
+
+    - name: Set up post build hook
+      if: >-
+        steps.check-updates.outputs.updated == '1' ||
+        github.event.inputs.force-rebuild == 'true'
+      run: |
+        cat > /tmp/post-build-hook.sh << EOF
+        set -euf
+        if [ -n "$OUT_PATHS" ]; then
+          echo "Uploading paths" $OUT_PATHS
+          NIX_SSHOPTS="-o StrictHostKeyChecking=no" nix copy --to "ssh://nixremote@mingzhu" $OUT_PATHS
+        fi
+        EOF
+        chmod +x /tmp/post-build-hook.sh
+
           
     - name: Install Nix
       uses: cachix/install-nix-action@v30
@@ -64,20 +71,6 @@ jobs:
         else
           echo "updated=1" >> "$GITHUB_OUTPUT"
         fi
-
-    - name: Set up post build hook
-      if: >-
-        steps.check-updates.outputs.updated == '1' ||
-        github.event.inputs.force-rebuild == 'true'
-      run: |
-        cat > /tmp/post-build-hook.sh << EOF
-        set -euf
-        if [ -n "$OUT_PATHS" ]; then
-          echo "Uploading paths" $OUT_PATHS
-          NIX_SSHOPTS="-o StrictHostKeyChecking=no" nix copy --to "ssh://nixremote@mingzhu" $OUT_PATHS
-        fi
-        EOF
-        chmod +x /tmp/post-build-hook.sh
 
     - name: Build & Upload
       if: >-

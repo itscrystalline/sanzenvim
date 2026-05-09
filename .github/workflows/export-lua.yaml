@@ -16,8 +16,6 @@ jobs:
   export:
     name: "Export init.lua"
     runs-on: ubuntu-24.04-arm
-    strategy:
-      fail-fast: false
 
     steps:
       - name: Checkout code
