@@ -42,6 +42,7 @@
             inherit (pkgs-stable) deno;
           })
         ];
+        config.allowUnfree = true;
       };
       nur = (import upstream-nur {inherit pkgs;}) // {repos.itscrystalline = import my-nur {inherit pkgs;};};
 
