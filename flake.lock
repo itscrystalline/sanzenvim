@@ -145,11 +145,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776845082,
-        "narHash": "sha256-qnjtxUPx/eLaT5VxbwsS215bTY+BCoTBmHXqYATK/0U=",
+        "lastModified": 1778575677,
+        "narHash": "sha256-FqIedi//5bZgzpMRpR9NANSj56HMLMPEVd3mt0dCqVo=",
         "ref": "refs/heads/main",
-        "rev": "59f3880c60bfcfb304e431c99d20ea4d389752f2",
-        "revCount": 60,
+        "rev": "565cac2dc9303a501c3e0888a0918e790f1c4ec5",
+        "revCount": 64,
         "type": "git",
         "url": "https://git.iw2tryhard.dev/itscrystalline/nur-packages"
       },
@@ -383,11 +383,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778306142,
-        "narHash": "sha256-TeUxtyVYPPAEkpl2a4hJY0I8mmu60B67lBgpwDQ2V/Y=",
+        "lastModified": 1778575328,
+        "narHash": "sha256-WfRY8dq3imGimtCzRCpkf5aqm2nX4BhGtS+rIBW5Gio=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "f8170691ea8c3fa20c998f32e2df58b71a7b3e4c",
+        "rev": "f62444a0b11ecab2621cff73a5f78240f4a9eb29",
         "type": "github"
       },
       "original": {

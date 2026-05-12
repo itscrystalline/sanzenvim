@@ -15,14 +15,5 @@
       verilog
       vhdl
     ];
-    # autocmds = [
-    #   {
-    #     enable = true;
-    #     command = ":LspStart veridian<CR>";
-    #     desc = "Start veridian LSP";
-    #     event = ["BufNew"];
-    #     pattern = ["*.sv"];
-    #   }
-    # ];
   };
 }
