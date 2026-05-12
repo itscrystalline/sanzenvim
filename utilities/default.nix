@@ -8,6 +8,7 @@
     ./neocord.nix
     ./silicon.nix
     ./images.nix
+    ./flash.nix
     ./terminal
   ];
 }
