@@ -34,6 +34,7 @@
       "https://app.slack.com"
       "https://deepl.com"
       "https://claude.ai"
+      "https://localhost:8888"
     ];
 in {
   vim.extraPlugins.firenvim = lib.mkIf full {
