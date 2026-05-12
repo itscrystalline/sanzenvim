@@ -13,9 +13,6 @@
     blacklist = ["Alpha" "^/run/user/%d+/firenvim/.*$"];
   };
 in {
-  # vim.presence.neocord = {
-  #   enable = true;
-  # };
   vim.startPlugins = lib.optionals full [
     (pkgs.vimPlugins.neocord.overrideAttrs {
       src = fetchFromGitHub {
