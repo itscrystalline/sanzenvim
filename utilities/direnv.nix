@@ -22,8 +22,6 @@
                   c:stop()
                 end
                 vim.cmd([[edit]])
-              else
-                print("No LSP attached yet")
               end
             end
           '';
