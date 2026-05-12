@@ -38,6 +38,7 @@
       veridian.cmd = lib.mkForce ["veridian"];
       qmlls.cmd = lib.mkForce ["qmlls"];
       bashls.cmd = lib.mkForce ["bashls" "start"];
+      matlab_ls.cmd = lib.mkForce ["matlab-language-server" "start"];
     };
     languages = {
       rust.lsp.package = lib.mkForce ["rust-analyzer"];
@@ -70,6 +71,7 @@
         };
         styler.command = lib.mkForce "styler";
         shfmt.command = lib.mkForce "shfmt";
+        mh_style.cmd = lib.mkForce "mh_style";
       };
     };
 
@@ -82,6 +84,7 @@
       eslint_d.cmd = lib.mkForce "eslint_d";
       ktlint.cmd = lib.mkForce "ktlint";
       shellcheck.cmd = lib.mkForce "shellcheck";
+      mh_lint.cmd = lib.mkForce "mh_lint";
     };
 
     extraPackages = lib.mkForce ([pkgs.ripgrep pkgs.direnv]

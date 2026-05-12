@@ -30,6 +30,7 @@
     ./qml.nix
     ./shell.nix
     ./dart.nix
+    ./matlab.nix
   ];
   vim = {
     languages = {
