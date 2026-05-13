@@ -4,19 +4,14 @@
   pkgs,
   ...
 }: let
-  matlabSearchScript = pkgs.writeShellScript "matlabls-docker.sh" ''
-    CONTAINER=$(docker ps --filter "ancestor=matlab-with-ls:latest" --format "{{.ID}}" | head -1)
-    if [ -z "$CONTAINER" ]; then
-        echo "no running container found" >&2
-        exit 1
-    fi
-    exec docker exec -i "$CONTAINER" node /usr/local/lib/matlab-language-server/out/index.js "$@"
+  matlabLspScript = pkgs.writeShellScript "matlab-lsp" ''
+    exec distrobox enter matlab -- node --no-deprecation $HOME/.local/share/matlab-lsp/out/index.js --matlabInstallPath $HOME/.local/share/matlab "$@"
   '';
 in
   lib.mkIf full {
     vim = {
       lsp.servers.matlab_ls = {
-        cmd = ["${matlabSearchScript}" "--stdio"];
+        cmd = ["${matlabLspScript}" "--stdio"];
         filetypes = ["matlab"];
         root_dir = lib.mkLuaInline ''
           function(bufnr, on_dir)
@@ -27,9 +22,8 @@ in
         settings = {
           MATLAB = {
             indexWorkspace = true;
-            installPath = "/opt/matlab/R2026a";
+            installPath = "/home/itscrystalline/.local/share/matlab";
             matlabConnectionTiming = "onStart";
-            telemetry = false;
           };
         };
       };
