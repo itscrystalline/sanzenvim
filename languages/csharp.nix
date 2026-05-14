@@ -1,6 +1,7 @@
 {
   full,
   pkgs,
+  lib,
   ...
 }: let
   unity_analyzer = pkgs.fetchNuGet {
@@ -14,10 +15,16 @@ in {
     languages.csharp = {
       enable = full;
       lsp.servers = ["roslyn-ls"];
-
-      extensions.roslyn-nvim.enable = true;
+      extensions.roslyn-nvim = {
+        enable = true;
+        setupOpts.filewatching = "off";
+      };
     };
     lsp.servers.roslyn-ls.settings = {
+      "csharp|background_analysis" = lib.mkForce {
+        dotnet_analyzer_diagnostics_scope = "openFiles";
+        dotnet_compiler_diagnostics_scope = "openFiles";
+      };
       "csharp|completion".dotnet_trigger_completion_in_argument_lists = true;
       "csharp|projects" = {
         dotnet_binary_log_path = null;
