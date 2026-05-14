@@ -3,8 +3,7 @@
   pkgs,
   lib,
   ...
-}: let
-in {
+}: {
   vim.lazy.plugins = lib.mkIf full {
     "img-clip.nvim" = {
       package = pkgs.vimPlugins.img-clip-nvim;
