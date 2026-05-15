@@ -79,7 +79,7 @@
               "${nvf-cord-pr}/modules/plugins/rich-presence/cord-nvim/default.nix"
               ({lib, ...}: {
                 disabledModules = ["modules/plugins/rich-presence/default.nix"];
-                config.vim.lazy.plugins.cord-nvim.package = lib.mkIf full (lib.mkForce nvf-cord-pr.packages.${system}.cord-nvim);
+                config.vim.lazy.plugins.cord-nvim = lib.mkIf full {package = lib.mkForce nvf-cord-pr.packages.${system}.cord-nvim;};
               })
             ]
             ++ extraModules;
