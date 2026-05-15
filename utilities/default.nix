@@ -5,7 +5,7 @@
     ./telescope.nix
     ./direnv.nix
     ./firenvim.nix
-    ./neocord.nix
+    ./discord-rpc.nix
     ./silicon.nix
     ./images.nix
     ./flash.nix
