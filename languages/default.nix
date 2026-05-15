@@ -1,12 +1,7 @@
-{
-  full,
-  lib,
-  ...
-}: {
+{full, ...}: {
   imports = [
     ./blink-cmp.nix
     ./conform.nix
-    ./lspsaga.nix
     ./jupyter.nix
 
     ./dap
@@ -39,7 +34,7 @@
       enableExtraDiagnostics = true;
       enableFormat = true;
     };
-    lsp = lib.mkIf full {
+    lsp = {
       enable = true;
       lspconfig.enable = true;
       formatOnSave = true;
@@ -49,16 +44,14 @@
         format = "cf";
         goToDefinition = "gD";
       };
+
+      lightbulb.enable = true;
     };
     diagnostics = {
       enable = true;
       config = {
-        virtual_text = {
-          current_line = false;
-        };
-        virtual_lines = {
-          current_line = true;
-        };
+        virtual_text = false;
+        virtual_lines = false;
         update_in_insert = true;
       };
     };
