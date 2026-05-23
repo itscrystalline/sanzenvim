@@ -30,9 +30,6 @@ jobs:
     #     tags: tag:ci
 
     - name: Set up post build hook
-      if: >-
-        steps.check-updates.outputs.updated == '1' ||
-        github.event.inputs.force-rebuild == 'true'
       run: |
         cat > /tmp/post-build-hook.sh << EOF
         set -euf
