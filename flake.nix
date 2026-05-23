@@ -73,6 +73,8 @@
 
               ./lua-post.nix
 
+              ./generators/pick-local-lsp.nix
+
               # FIXME: wait till https://github.com/NotAShelf/nvf/pull/1519 merges to remove
               "${nvf-cord-pr}/modules/plugins/rich-presence/cord-nvim/config.nix"
               "${nvf-cord-pr}/modules/plugins/rich-presence/cord-nvim/cord-nvim.nix"

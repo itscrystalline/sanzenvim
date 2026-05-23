@@ -4,6 +4,8 @@
   full,
   ...
 }: {
+  disabledModules = [./pick-local-lsp.nix];
+
   vim = {
     lsp.servers = {
       nil.cmd = lib.mkForce ["nil"];
