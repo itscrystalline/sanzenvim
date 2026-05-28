@@ -40,14 +40,14 @@
         keys = [
           {
             mode = ["n" "v"];
-            key = "<leader>PP";
+            key = "<leader>P";
             action = ":PasteImage<CR>";
             desc = "Paste image from system clipboard";
             silent = true;
           }
           {
             mode = ["n" "v"];
-            key = "<leader>PS";
+            key = "<leader>S";
             action = ''
               function()
                 local telescope = require("telescope.builtin")
