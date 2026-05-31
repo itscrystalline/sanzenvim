@@ -19,6 +19,7 @@ permissions:
 jobs:
   export:
     name: "Export init.lua (${{ matrix.runner.arch }})"
+    if: "!startsWith(github.event.head_commit.message, 'Merge pull request')"
     runs-on: ${{ matrix.runner.tag }}
     strategy:
       fail-fast: false
