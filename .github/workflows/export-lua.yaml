@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   export:
-    name: "Export init.lua"
+    name: "Export init.lua (${{ matrix.runner.arch }})"
     runs-on: ${{ matrix.runner.tag }}
     strategy:
       fail-fast: false
