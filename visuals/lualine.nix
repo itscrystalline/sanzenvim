@@ -1,15 +1,6 @@
-{
-  full,
-  icons,
-  ...
-}: {
+{icons, ...}: {
   vim.statusline.lualine = {
     enable = true;
-    disabledFiletypes = [
-      "alpha"
-      "winbar"
-      "statusline"
-    ];
     activeSection = {
       a = [
         ''
