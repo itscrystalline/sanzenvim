@@ -2,88 +2,95 @@ name: Update flake lockfile
 
 on:
   workflow_dispatch:
-    inputs:
-      force-rebuild:
-        type: boolean
-        default: false
-
   schedule:
     - cron: "0 0 * * 3,6"
 
-permissions:
-  contents: write
-
 jobs:
   build:
-    name: "update flake lockfiles & upload to my binary cache"
-    runs-on: ubuntu-24.04-arm
+    name: "update flake lockfiles"
+    runs-on: ubuntu-latest-arm
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # - name: Set up Tailscale
-    #   uses: tailscale/github-action@v4
-    #   with:
-    #     oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-    #     oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-    #     tags: tag:ci
-
-    - name: Set up post build hook
-      run: |
-        cat > /tmp/post-build-hook.sh << EOF
-        set -euf
-        if [ -n "$OUT_PATHS" ]; then
-          echo "Uploading paths" $OUT_PATHS
-          NIX_SSHOPTS="-o StrictHostKeyChecking=no" nix copy --to "ssh://nixremote@mingzhu" $OUT_PATHS
-        fi
-        EOF
-        chmod +x /tmp/post-build-hook.sh
-
-          
     - name: Install Nix
       uses: cachix/install-nix-action@v30
       with:
-        nix_path: nixpkgs=channel:nixos-25.11
+        nix_path: nixpkgs=channel:nixos-26.05
         extra_nix_config: |
           extra-substituters = http://cache.crys
           extra-trusted-public-keys = mingzhu:V0KsUipFnrBNsfUD8VI0rFXQpgE3KKJfRby9Jm8cLTQ=
           connect-timeout = 30
           fallback = true
-          post-build-hook = /tmp/post-build-hook.sh
+          access-tokens = github.com=${{ secrets.GH_TOKEN }}
 
-    - name: Update flake inputs
-      id: check-updates
+    - name: Update flake.lock
+      id: update
       run: |
-        nix flake update 2>&1 | tee /tmp/update-output.txt
-        {
-          echo "output<<FLAKE_UPDATE_END"
-          cat /tmp/update-output.txt
-          echo "FLAKE_UPDATE_END"
-        } >> $GITHUB_OUTPUT
-        nix flake update
-        if [[ -z "$(git status -s)" ]]; then
-          echo "updated=0" >> "$GITHUB_OUTPUT"
-          echo "Nothing updated. Nothing needs to be done."
-        else
-          echo "updated=1" >> "$GITHUB_OUTPUT"
-        fi
+        nix flake update 2> >(tee /dev/stderr) | awk '
+          /^• Updated input/ {in_update = 1; print; next}
+          in_update && !/^warning:/ {print}
+          /^$/ {in_update = 0}
+        ' > update.log
 
-    - name: Build & Upload
-      if: >-
-        steps.check-updates.outputs.updated == '1' ||
-        github.event.inputs.force-rebuild == 'true'
-      run: nix build .# --no-link --print-out-paths -L
+        echo "UPDATE_LOG<<EOF" >> $GITHUB_ENV
+        cat update.log >> $GITHUB_ENV 
+        echo "EOF" >> $GITHUB_ENV
 
-    - name: Commit
-      if: >-
-        steps.check-updates.outputs.updated == '1' ||
-        github.event.inputs.force-rebuild == 'true'
-      uses: EndBug/add-and-commit@v9
+        rm update.log
+
+    - name: Write PR body template
+      uses: https://github.com/DamianReeves/write-file-action@v1.3
       with:
-        default_author: github_actions
-        push: true
-        message: |
-          chore: update flake (automated)
+        path: pr_body.template
+        contents: |
+          automatically updated:
 
-          ${{ steps.check-update.outputs.output }}
+          ```
+          ${{ env.UPDATE_LOG }}
+          ```
+
+    - name: Generate PR body
+      uses: pedrolamas/handlebars-action@v2.4.0 # v2.4.0
+      with:
+        files: "pr_body.template"
+        output-filename: "pr_body.md"
+    - name: Save PR body
+      id: pr_body
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: "pr_body.md"
+
+    - name: Remove temporary files
+      run: |
+        rm pr_body.template
+        rm pr_body.md
+
+    - uses: EndBug/add-and-commit@v10 # You can change this to use a specific version.
+      with:
+        author_name: crystals forgojo actions runner
+        author_email: runner@git.iw2tryhard.dev
+        message: |
+          automated: Update `flake.lock`
+
+          ${{ steps.pr_body.outputs.content }}
+        new_branch: update-flake-lock 
+
+    - name: Install tea
+      run: nix profile install nixpkgs#tea
+
+    - name: Create Pull Request
+      id: create-pull-request
+      uses: https://git.theless.one/actions/create-pr@main
+      with:
+        source-branch: update-flake-lock
+        title: 'chore: Update flake (automated)'
+        description: ${{ steps.pr_body.outputs.content }}
+        token: ${{ secrets.FJ_TOKEN }}
+        user: itscrystalline
+        auto-merge: true
+        delete-branch: true
+
+    - name: PR number
+      run: echo "PR \#${{ steps.create-pull-request.outputs.pr }}"

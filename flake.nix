@@ -2,7 +2,6 @@
   description = "sanzenvim (燦然vim)";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     nvf = {
       url = "github:notashelf/nvf";
@@ -31,7 +30,6 @@
   };
   outputs = {
     nixpkgs,
-    nixpkgs-stable,
     flake-utils,
     nvf,
     nvf-cord-pr,
@@ -41,15 +39,8 @@
     ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
-      pkgs-stable = import nixpkgs-stable {inherit system;};
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [
-          (_: _: {
-            # FIXME: wait until unstable.aarch64-linux.deno builds successfully to remove
-            inherit (pkgs-stable) deno;
-          })
-        ];
         config.allowUnfree = true;
       };
       nur = (import upstream-nur {inherit pkgs;}) // {repos.itscrystalline = import my-nur {inherit pkgs;};};

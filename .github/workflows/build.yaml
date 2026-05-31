@@ -9,22 +9,22 @@ on:
     paths-ignore:
       - .github/**
       - README.md
+  pull_request:
+    paths-ignore:
+      - .github/**
+      - README.md
 
 permissions:
   contents: read
 
 jobs:
-  build:
-    name: "Build Bundle (${{ matrix.variant.label }}, ${{ matrix.platform.name }})"
-    runs-on: ${{ matrix.platform.on }}
+  build-x86_64:
+    if: "!startsWith(github.event.head_commit.message, 'Merge pull request')"
+    name: "Build Bundle (${{ matrix.variant.label }}, x86_64)"
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        platform: 
-          - on: ubuntu-latest 
-            name: x86_64
-          - on: ubuntu-24.04-arm 
-            name: aarch64
         variant:
           - pkg: unwrapped
             label: full
@@ -35,12 +35,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # - name: Set up Tailscale
-    #   uses: tailscale/github-action@v4
-    #   with:
-    #     oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-    #     oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-    #     tags: tag:ci
     - name: Set up post build hook
       run: |
         cat > /tmp/post-build-hook.sh << EOF
@@ -55,13 +49,14 @@ jobs:
     - name: Install Nix
       uses: cachix/install-nix-action@v30
       with:
-        nix_path: nixpkgs=channel:nixos-25.11
+        nix_path: nixpkgs=channel:nixos-26.05
         extra_nix_config: |
           extra-substituters = http://cache.crys
           extra-trusted-public-keys = mingzhu:V0KsUipFnrBNsfUD8VI0rFXQpgE3KKJfRby9Jm8cLTQ=
           connect-timeout = 30
           fallback = true
           post-build-hook = /tmp/post-build-hook.sh
+          access-tokens = github.com=${{ secrets.GH_TOKEN }}
 
     - name: Build
       run: |
@@ -70,6 +65,57 @@ jobs:
     - name: Upload Nix build artifacts
       uses: https://github.com/christopherHX/gitea-upload-artifact@v4
       with:
-        name: "sanzenvim-${{ matrix.variant.label }}-${{ matrix.platform.name }}"
+        name: "sanzenvim-${{ matrix.variant.label }}-x86_64"
+        path: |
+          bundle/bin/nvim
+
+  build-aarch64:
+    if: "!startsWith(github.event.head_commit.message, 'Merge pull request')"
+    name: "Build Bundle (${{ matrix.variant.label }}, aarch64)"
+    runs-on: ubuntu-latest-arm
+    strategy:
+      fail-fast: false
+      matrix:
+        variant:
+          - pkg: unwrapped
+            label: full
+          - pkg: mini
+            label: mini
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up post build hook
+      run: |
+        cat > /tmp/post-build-hook.sh << EOF
+        set -euf
+        if [ -n "$OUT_PATHS" ]; then
+        echo "Uploading paths" $OUT_PATHS
+        NIX_SSHOPTS="-o StrictHostKeyChecking=no" nix copy --to "ssh://nixremote@mingzhu" $OUT_PATHS
+        fi
+        EOF
+        chmod +x /tmp/post-build-hook.sh
+          
+    - name: Install Nix
+      uses: cachix/install-nix-action@v30
+      with:
+        nix_path: nixpkgs=channel:nixos-26.05
+        extra_nix_config: |
+          extra-substituters = http://cache.crys
+          extra-trusted-public-keys = mingzhu:V0KsUipFnrBNsfUD8VI0rFXQpgE3KKJfRby9Jm8cLTQ=
+          connect-timeout = 30
+          fallback = true
+          post-build-hook = /tmp/post-build-hook.sh
+          access-tokens = github.com=${{ secrets.GH_TOKEN }}
+
+    - name: Build
+      run: |
+        nix bundle --bundler .#simple -o bundle .#${{ matrix.variant.pkg }} -L 2>&1
+
+    - name: Upload Nix build artifacts
+      uses: https://github.com/christopherHX/gitea-upload-artifact@v4
+      with:
+        name: "sanzenvim-${{ matrix.variant.label }}-aarch64"
         path: |
           bundle/bin/nvim
