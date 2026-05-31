@@ -98,12 +98,5 @@
           };
         };
       };
-
-      bundlers.simple = drv:
-        (import ./generators/simple-bundler.nix) {
-          inherit pkgs;
-          nix-portable-bundler = nix-portable.bundlers.${system}.default;
-        }
-        drv;
     });
 }
