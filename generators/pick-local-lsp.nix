@@ -56,7 +56,6 @@ in {
     veridian.cmd = lib.mkForce ["${lib.getExe (choiceScriptPkgs "veridian" "veridian")}"]; # complains abt not having meta.mainProgram
     qmlls.cmd = lib.mkForce ["${lib.getExe (choiceScriptPkgs "qmlls" "kdePackages.qtdeclarative.out")}"];
     bashls.cmd = lib.mkForce ["${lib.getExe (choiceScriptPkgs "bashls" "bash-language-server")}" "start"];
-    matlab_ls.cmd = lib.mkForce ["${lib.getExe (choiceScript "matlab-language-server")}" "start"];
   };
   vim.languages = {
     rust.lsp.package = lib.mkForce ["${lib.getExe (choiceScript "rust-analyzer")}"];

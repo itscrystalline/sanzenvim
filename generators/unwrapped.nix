@@ -40,7 +40,6 @@
       veridian.cmd = lib.mkForce ["veridian"];
       qmlls.cmd = lib.mkForce ["qmlls"];
       bashls.cmd = lib.mkForce ["bashls" "start"];
-      matlab_ls.cmd = lib.mkForce ["matlab-language-server" "start"];
     };
     languages = {
       rust.lsp.package = lib.mkForce ["rust-analyzer"];
