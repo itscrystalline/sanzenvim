@@ -22,7 +22,7 @@ in {
         		end
         	else
         		fidget.notify("opening new lazygit")
-        		local result = vim.system({ "zellij", "action", "new-pane", "-f", "--width", "80%", "--height", "60%", "--cwd", vim.fn.getcwd(), "--", "lazygit" }):wait()
+        		local result = vim.system({ "zellij", "action", "new-pane", "-f", "--width", "90%", "--height", "80%", "-c", "--cwd", vim.fn.getcwd(), "--", "lazygit" }):wait()
         		if result.code ~= 0 then
         			fidget.notify("Unable to open new pane. Are you in zellij / have lazygit installed?", vim.log.levels.ERROR)
         		else
