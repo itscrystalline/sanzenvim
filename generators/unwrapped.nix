@@ -12,18 +12,8 @@
       lua-language-server.cmd = lib.mkForce ["lua-language-server"];
       clangd.cmd = lib.mkForce ["clangd"];
       ty.cmd = lib.mkForce ["ty" "server"];
-      vtsls = {
-        cmd = lib.mkForce ["vtsls" "--stdio"];
-        settings.vtsls.tsserver.globalPlugins = lib.mkForce [
-          {
-            name = "@vue/typescript-plugin";
-            location = "";
-            languages = ["vue"];
-            configNamespace = "typescript";
-          }
-        ];
-      };
-      vue_ls.cmd = lib.mkForce ["vue-language-server" "--stdio"];
+      # vtsls.cmd = lib.mkForce ["vtsls" "--stdio"];
+      # vue_ls.cmd = lib.mkForce ["vue-language-server" "--stdio"];
       yaml-language-server.cmd = lib.mkForce ["yaml-language-server" "--stdio"];
       marksman.cmd = lib.mkForce ["marksman" "server"];
       zls.cmd = lib.mkForce ["zls"];

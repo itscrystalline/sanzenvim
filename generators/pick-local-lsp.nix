@@ -28,18 +28,18 @@ in {
     lua-language-server.cmd = lib.mkForce ["${lib.getExe (choiceScript "lua-language-server")}"];
     clangd.cmd = lib.mkForce ["${lib.getExe (choiceScriptPkgs "clangd" "clang-tools")}"];
     ty.cmd = lib.mkForce ["${lib.getExe (choiceScript "ty")}" "server"];
-    vtsls = {
-      cmd = lib.mkForce ["${lib.getExe (choiceScript "vtsls")}" "--stdio"];
-      settings.vtsls.tsserver.globalPlugins = lib.mkForce [
-        {
-          name = "@vue/typescript-plugin";
-          location = "";
-          languages = ["vue"];
-          configNamespace = "typescript";
-        }
-      ];
-    };
-    vue_ls.cmd = lib.mkForce ["${lib.getExe (choiceScript "vue-language-server")}" "--stdio"];
+    # vtsls = {
+    #   cmd = lib.mkForce ["${lib.getExe (choiceScript "vtsls")}" "--stdio"];
+    #   settings.vtsls.tsserver.globalPlugins = lib.mkForce [
+    #     {
+    #       name = "@vue/typescript-plugin";
+    #       location = "";
+    #       languages = ["vue"];
+    #       configNamespace = "typescript";
+    #     }
+    #   ];
+    # };
+    # vue_ls.cmd = lib.mkForce ["${lib.getExe (choiceScript "vue-language-server")}" "--stdio"];
     yaml-language-server.cmd = lib.mkForce ["${lib.getExe (choiceScript "yaml-language-server")}" "--stdio"];
     marksman.cmd = lib.mkForce ["${lib.getExe (choiceScript "marksman")}" "server"];
     zls.cmd = lib.mkForce ["${lib.getExe (choiceScript "zls")}"];
