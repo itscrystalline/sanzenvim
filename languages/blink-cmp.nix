@@ -1,113 +1,61 @@
 {
   pkgs,
   lib,
-  full,
   icons,
   ...
-}: let
-  deepMergeWithLists = lhs: rhs:
-    lib.mapAttrs (
-      k: v:
-        if lib.hasAttr k rhs
-        then let
-          lv = v;
-          rv = rhs.${k};
-        in
-          if lib.isAttrs lv && lib.isAttrs rv
-          then deepMergeWithLists lv rv
-          else if lib.isList lv && lib.isList rv
-          then lv ++ rv
-          else rv
-        else v
-    )
-    lhs
-    // lib.removeAttrs rhs (lib.attrNames lhs);
-
-  withPlugins = plugins:
-    lib.foldl' deepMergeWithLists {} (map ({
-        name,
-        package,
-        module,
-        addToDefault ? true,
-      }: {
-        setupOpts.sources = {
-          default =
-            if addToDefault
-            then [name]
-            else [];
-          providers =
-            if addToDefault
-            then {
-              ${name}.module = module;
-            }
-            else {};
-        };
-        sourcePlugins.${name} = {
-          inherit package module;
-          enable = true;
-        };
-      })
-      plugins);
-in {
-  vim.autocomplete.blink-cmp =
-    deepMergeWithLists {
-      enable = true;
-      friendly-snippets.enable = true;
-      mappings = {
-        close = "<C-ESC>";
-        complete = "<C-Space>";
-        confirm = "<CR>";
-        next = "<Tab>";
-        previous = "<S-Tab>";
-        scrollDocsDown = "<Down>";
-        scrollDocsUp = "<Up>";
+}: {
+  vim.autocomplete.blink-cmp = {
+    enable = true;
+    friendly-snippets.enable = true;
+    mappings = {
+      close = "<C-ESC>";
+      complete = "<C-Space>";
+      confirm = "<CR>";
+      next = "<Tab>";
+      previous = "<S-Tab>";
+      scrollDocsDown = "<Down>";
+      scrollDocsUp = "<Up>";
+    };
+    setupOpts = {
+      cmdline.keymap.preset = "default";
+      completion = {
+        trigger.show_on_blocked_trigger_characters = [" " "\n" "\t" ":"];
+        documentation.auto_show_delay_ms = 50;
+        ghost_text.enabled = true;
+        menu.draw.columns = lib.mkLuaInline ''
+          {
+            ${
+            if icons
+            then ''{ "kind_icon" },''
+            else ""
+          }
+            { "label", "label_description", gap = 1 },
+            { "kind" }
+          }
+        '';
       };
-      setupOpts = {
-        cmdline.keymap.preset = "default";
-        completion = {
-          trigger.show_on_blocked_trigger_characters = [" " "\n" "\t" ":"];
-          documentation.auto_show_delay_ms = 50;
-          ghost_text.enabled = true;
-          menu.draw.columns = lib.mkLuaInline ''
-            {
-              ${
-              if icons
-              then ''{ "kind_icon" },''
-              else ""
-            }
-              { "label", "label_description", gap = 1 },
-              { "kind" }
-            }
-          '';
+      signature.enabled = true;
+      sources = {
+        providers = {
+          lsp.score_offset = 1000;
+          nerdfont = {
+            module = "blink-nerdfont";
+            score_offset = -100;
+          };
+          ripgrep.score_offset = -10;
+          spell.score_offset = -10;
         };
-        signature = {
-          enabled = true;
-        };
-        sources.default = [
-          "lsp"
-          "path"
-          "snippets"
-          "buffer"
-        ];
       };
-    } (
-      withPlugins [
-        {
-          name = "ripgrep";
-          module = "blink-ripgrep";
-          package = "blink-ripgrep-nvim";
-        }
-        {
-          name = "nerdfont";
-          module = "blink-nerdfont";
-          package = pkgs.vimPlugins.blink-nerdfont-nvim;
-        }
-        {
-          name = "spell";
-          module = "blink-cmp-spell";
-          package = "blink-cmp-spell";
-        }
-      ]
-    );
+    };
+    sourcePlugins = {
+      ripgrep.enable = true;
+      nerdfont = {
+        enable = true;
+        package = pkgs.vimPlugins.blink-nerdfont-nvim;
+        module = "blink-nerdfont";
+      };
+      spell.enable = true;
+    };
+  };
   vim.extraPackages = [pkgs.ripgrep];
 }
