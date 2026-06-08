@@ -1,8 +1,4 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
+{lib, ...}: {
   vim = {
     languages.yaml.enable = true;
     languages.json.enable = true;
