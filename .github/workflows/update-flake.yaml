@@ -21,10 +21,6 @@ jobs:
       with:
         nix_path: nixpkgs=channel:nixos-26.05
         extra_nix_config: |
-          extra-substituters = http://cache.crys
-          extra-trusted-public-keys = mingzhu:V0KsUipFnrBNsfUD8VI0rFXQpgE3KKJfRby9Jm8cLTQ=
-          connect-timeout = 30
-          fallback = true
           access-tokens = github.com=${{ secrets.GH_TOKEN }}
 
     - name: Update flake.lock
