@@ -58,6 +58,12 @@ jobs:
             export/sanzenvim.generated.lua
             export/pack
 
+      - name: Install remote store SSH key
+        run: |
+          echo $MINGZHU_PRIVKEY_NIXREMOTE_BASE64 | base64 --decode > /tmp/nixremote
+          chmod 400 /tmp/nixremote
+          wc /tmp/nixremote
+
       - name: Upload to binary cache
         run: |
-          NIX_SSHOPTS="-o StrictHostKeyChecking=no" nix copy --to "ssh://nixremote@mingzhu" ./result
+          NIX_SSHOPTS="-o StrictHostKeyChecking=no -i /tmp/nixremote" nix copy --to "ssh://nixremote@mingzhu" ./result
