@@ -60,7 +60,7 @@ jobs:
 
       - name: Install remote store SSH key
         run: |
-          echo $MINGZHU_PRIVKEY_NIXREMOTE_BASE64 | base64 --decode > /tmp/nixremote
+          echo ${{ secrets.MINGZHU_PRIVKEY_NIXREMOTE_BASE64 }} | base64 --decode > /tmp/nixremote
           chmod 400 /tmp/nixremote
           wc /tmp/nixremote
 
