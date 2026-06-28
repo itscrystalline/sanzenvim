@@ -29,7 +29,7 @@
       asm-lsp.cmd = lib.mkForce ["asm-lsp"];
       veridian.cmd = lib.mkForce ["veridian"];
       qmlls.cmd = lib.mkForce ["qmlls"];
-      bashls.cmd = lib.mkForce ["bashls" "start"];
+      bash-language-server.cmd = lib.mkForce ["bash-language-server" "start"];
     };
     languages = {
       rust.lsp.package = lib.mkForce ["rust-analyzer"];

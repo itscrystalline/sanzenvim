@@ -33,7 +33,6 @@
     flake-utils,
     nvf,
     nvf-cord-pr,
-    nix-portable,
     upstream-nur,
     my-nur,
     ...
