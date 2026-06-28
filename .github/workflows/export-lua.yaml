@@ -66,4 +66,4 @@ jobs:
 
       - name: Upload to binary cache
         run: |
-          NIX_SSHOPTS="-o StrictHostKeyChecking=no -i /tmp/nixremote" nix copy --to "ssh://nixremote@mingzhu" ./result
+          NIX_SSHOPTS="-o StrictHostKeyChecking=no -i /tmp/nixremote" nix copy --substitute-on-destination --to "ssh://nixremote@mingzhu" ./result
