@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Call HA webhook
-        run: curl -X PUT http://dorm.crys/api/webhook/wake-up-emily
+        run: curl -X PUT http://dorm.crys/api/webhook/${{ secrets.EMILY_WAKE }}
 
   export:
     name: "Export init.lua (${{ matrix.runner.arch }})"
