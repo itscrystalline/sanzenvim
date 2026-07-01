@@ -17,8 +17,18 @@ permissions:
   contents: read
 
 jobs:
+  wake-up-emily:
+    name: Wake up emily
+    if: "!startsWith(github.event.head_commit.message, 'Merge pull request')"
+    runs-on: native-arm
+
+    steps:
+      - name: Call HA webhook
+        run: curl -X PUT http://dorm.crys/api/webhook/wake-up-emily
+
   export:
     name: "Export init.lua (${{ matrix.runner.arch }})"
+    needs: wake-up-emily
     if: "!startsWith(github.event.head_commit.message, 'Merge pull request')"
     runs-on: ${{ matrix.runner.tag }}
     strategy:
